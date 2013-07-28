@@ -8,7 +8,7 @@ using System.Text;
 using System.IO;
 using Microsoft.Xna.Framework;
 
-namespace Gameception.ScreenManager
+namespace Gameception
 {
     public enum ScreenState
     {
@@ -125,33 +125,6 @@ namespace Gameception.ScreenManager
             get { return controllingPlayer; }
             internal set { controllingPlayer = value; }
         }
-
-        /*
-        /// <summary>
-        /// Gets the gestures the screen is interested in. Screens should be as specific
-        /// as possible with gestures to increase the accuracy of the gesture engine.
-        /// For example, most menus only need Tap or perhaps Tap and VerticalDrag to operate.
-        /// These gestures are handled by the ScreenManager when screens change and
-        /// all gestures are placed in the InputState passed to the HandleInput method.
-        /// </summary>
-        public GestureType EnabledGestures
-        {
-            get { return enabledGestures; }
-            protected set
-            {
-                enabledGestures = value;
-
-                // the screen manager handles this during screen changes, but
-                // if this screen is active and the gesture types are changing,
-                // we have to update the TouchPanel ourself.
-                if (ScreenState == ScreenState.Active)
-                {
-                    TouchPanel.EnabledGestures = value;
-                }
-            }
-        }
-
-        GestureType enabledGestures = GestureType.None; */
 
         #endregion
 

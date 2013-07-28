@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace Gameception.ScreenManager
+namespace Gameception
 {
     /// <summary>
     /// Sits behind all other menu screens as a background
@@ -46,7 +46,7 @@ namespace Gameception.ScreenManager
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            backgroundTexture = content.Load<Texture2D>("background");
+            backgroundTexture = content.Load<Texture2D>("Backgrounds/main");
         }
 
 

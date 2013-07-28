@@ -107,15 +107,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gameception.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="ScreenManager\BackgroundScreen.cs" />
     <Compile Include="ScreenManager\GameplayScreen.cs" />
     <Compile Include="ScreenManager\InputState.cs" />
     <Compile Include="ScreenManager\LoadingScreen.cs" />
     <Compile Include="ScreenManager\MainMenuScreen.cs" />
     <Compile Include="ScreenManager\MenuEntry.cs" />
     <Compile Include="ScreenManager\MenuScreen.cs" />
+    <Compile Include="ScreenManager\MessageBoxScreen.cs" />
+    <Compile Include="ScreenManager\OptionsMenuScreen.cs" />
+    <Compile Include="ScreenManager\PauseMenuScreen.cs" />
     <Compile Include="ScreenManager\PlayerIndexEventArgs.cs" />
     <Compile Include="ScreenManager\Screen.cs" />
     <Compile Include="ScreenManager\ScreenManager.cs" />

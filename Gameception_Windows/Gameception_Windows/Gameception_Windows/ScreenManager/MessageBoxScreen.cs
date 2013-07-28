@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
-namespace Gameception.ScreenManager
+namespace Gameception
 {
     /// <summary>
     /// Popup message box screen to display confirmation messages
@@ -69,7 +69,7 @@ namespace Gameception.ScreenManager
         {
             ContentManager content = ScreenManager.Game.Content;
 
-            gradientTexture = content.Load<Texture2D>("gradient");
+            gradientTexture = content.Load<Texture2D>("Backgrounds/gradient");
         }
 
         #endregion

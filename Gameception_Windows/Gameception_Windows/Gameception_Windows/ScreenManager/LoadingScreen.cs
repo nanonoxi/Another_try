@@ -8,7 +8,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Gameception.ScreenManager
+namespace Gameception
 {
     /// <summary>
     /// From the example:

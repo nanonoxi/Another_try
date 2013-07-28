@@ -8,7 +8,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Gameception.ScreenManager
+namespace Gameception
 {
     class MenuEntry
     {
@@ -49,7 +49,7 @@ namespace Gameception.ScreenManager
         /// <summary>
         /// height measurement of text
         /// </summary>
-        public virtual int GetHeight(MainMenuScreen screen)
+        public virtual int GetHeight(MenuScreen screen)
         {
             return screen.ScreenManager.Font.LineSpacing;
         }
@@ -58,7 +58,7 @@ namespace Gameception.ScreenManager
         /// <summary>
         /// width mesaurement of text
         /// </summary>
-        public virtual int GetWidth(MainMenuScreen screen)
+        public virtual int GetWidth(MenuScreen screen)
         {
             return (int)screen.ScreenManager.Font.MeasureString(Text).X;
         }

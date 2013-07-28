@@ -10,14 +10,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
 
-namespace Gameception.ScreenManager
+namespace Gameception
 {
     /// <summary>
     /// Manages Screen instances by maintaining a stack of Screens.
     /// Calls Update & Draw on stack as required, routes input to
     /// top active screen.
     /// </summary>
-    class ScreenManager : DrawableGameComponent
+    public class ScreenManager : DrawableGameComponent
     {
         #region Attributes
 
@@ -62,7 +62,6 @@ namespace Gameception.ScreenManager
 
         #endregion
 
-
         #region Initialization
 
         /// <summary>
@@ -86,8 +85,8 @@ namespace Gameception.ScreenManager
             ContentManager content = Game.Content;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = content.Load<SpriteFont>("menufont");
-            blankTexture = content.Load<Texture2D>("blank");
+            font = content.Load<SpriteFont>("Fonts/menufont");
+            blankTexture = content.Load<Texture2D>("Backgrounds/blank");
 
             foreach (Screen screen in screens)
             {

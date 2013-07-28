@@ -8,9 +8,9 @@ using System.Text;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 
-namespace Gameception.ScreenManager
+namespace Gameception
 {
-    class InputState
+    public class InputState
     {
         #region Attributes
 

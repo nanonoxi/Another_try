@@ -8,7 +8,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 
 
-namespace Gameception.ScreenManager
+namespace Gameception
 {
     class PlayerIndexEventArgs : EventArgs
     {

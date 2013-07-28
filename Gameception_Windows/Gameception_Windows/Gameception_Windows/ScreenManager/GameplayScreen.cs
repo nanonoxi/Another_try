@@ -11,7 +11,7 @@ using System.Threading;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Gameception.ScreenManager
+namespace Gameception
 {
     /// <summary>
     /// Implement game logic here
@@ -52,7 +52,7 @@ namespace Gameception.ScreenManager
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            gameFont = content.Load<SpriteFont>("gamefont");
+            gameFont = content.Load<SpriteFont>("Fonts/gamefont");
 
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a
