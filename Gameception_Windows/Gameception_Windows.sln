@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gameception_Windows", "Gameception_Windows\Gameception_Windows\Gameception_Windows.csproj", "{C4F9A0F8-1530-4361-A09F-687BCE8590DF}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "Gameception_WindowsContent", "Gameception_Windows\Gameception_WindowsContent\Gameception_WindowsContent.contentproj", "{036FD2AC-D579-4BF4-8DA5-CC67F2E760D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C4F9A0F8-1530-4361-A09F-687BCE8590DF}.Debug|x86.ActiveCfg = Debug|x86
+		{C4F9A0F8-1530-4361-A09F-687BCE8590DF}.Debug|x86.Build.0 = Debug|x86
+		{C4F9A0F8-1530-4361-A09F-687BCE8590DF}.Release|x86.ActiveCfg = Release|x86
+		{C4F9A0F8-1530-4361-A09F-687BCE8590DF}.Release|x86.Build.0 = Release|x86
+		{036FD2AC-D579-4BF4-8DA5-CC67F2E760D6}.Debug|x86.ActiveCfg = Debug|x86
+		{036FD2AC-D579-4BF4-8DA5-CC67F2E760D6}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
