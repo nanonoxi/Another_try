@@ -102,7 +102,7 @@ namespace Gameception
         public virtual void Update(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
             // add fade in effect for menu selection
-            float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
+            float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds *4;
 
             if (isSelected)
                 selectionFade = Math.Min(selectionFade + fadeSpeed, 1);
@@ -123,13 +123,13 @@ namespace Gameception
         public virtual void Draw(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
             // draw selected entry in _, otherwise _
-            Color colour = isSelected ? Color.White : Color.Gray;
+            Color colour = isSelected ? Color.LightGreen : Color.Gray;
             colour *= screen.TransitionAlpha;
 
             // pulsate effect
             double time = gameTime.TotalGameTime.TotalSeconds;
             float pulsate = (float)Math.Sin(time * 6) + 1;
-            float scale = 1 + pulsate * 0.05f * selectionFade;
+            float scale = 1 + pulsate * 0.01f * selectionFade;
 
             ScreenManager screenManager = screen.ScreenManager;
             SpriteBatch spriteBatch = screenManager.SpriteBatch;

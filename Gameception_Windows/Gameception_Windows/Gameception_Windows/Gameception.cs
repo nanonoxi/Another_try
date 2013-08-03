@@ -62,14 +62,9 @@ namespace Gameception
 
         #region Draw
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
         protected override void Draw(GameTime gameTime)
         {
             graphics.GraphicsDevice.Clear(Color.Black);
-
-            // The real drawing happens inside the screen manager component.
             base.Draw(gameTime);
         }
 
