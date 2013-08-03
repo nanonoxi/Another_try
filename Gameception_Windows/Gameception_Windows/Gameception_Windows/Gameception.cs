@@ -32,10 +32,10 @@ namespace Gameception
             Content.RootDirectory = "Content";
 
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1920;
-            graphics.PreferredBackBufferHeight = 1080;
+            graphics.PreferredBackBufferWidth = 1000; //1920;
+            graphics.PreferredBackBufferHeight = 600; //1080;
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
 
             // Create the screen manager component.
             screenManager = new ScreenManager(this);
@@ -43,8 +43,7 @@ namespace Gameception
             Components.Add(screenManager);
 
             // Activate the first screens.
-            screenManager.AddScreen(new BackgroundScreen(), null);
-            screenManager.AddScreen(new MainMenuScreen(), null);
+            screenManager.AddScreen(new SplashScreen(screenManager), null);
         }
 
 
