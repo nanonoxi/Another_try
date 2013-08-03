@@ -32,6 +32,10 @@ namespace Gameception
             Content.RootDirectory = "Content";
 
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
+            graphics.PreferMultiSampling = false;
+            graphics.IsFullScreen = true;
 
             // Create the screen manager component.
             screenManager = new ScreenManager(this);

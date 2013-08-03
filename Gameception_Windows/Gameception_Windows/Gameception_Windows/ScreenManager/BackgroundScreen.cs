@@ -46,7 +46,7 @@ namespace Gameception
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            backgroundTexture = content.Load<Texture2D>("Backgrounds/main");
+            backgroundTexture = content.Load<Texture2D>("Backgrounds/tetris_matrix_0");
         }
 
 
