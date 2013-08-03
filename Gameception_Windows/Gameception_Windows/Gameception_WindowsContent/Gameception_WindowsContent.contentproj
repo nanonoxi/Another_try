@@ -56,8 +56,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backgrounds\loading.jpg">
-      <Name>loading</Name>
+    <Compile Include="Backgrounds\tetris_matrix_0.jpg">
+      <Name>tetris_matrix_0</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -77,8 +77,41 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backgrounds\main.png">
-      <Name>main</Name>
+    <Compile Include="Backgrounds\tetris_matrix_1.png">
+      <Name>tetris_matrix_1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Backgrounds\tetris_heart.jpg">
+      <Name>tetris_heart</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Backgrounds\matrix_splash_0.png">
+      <Name>matrix_splash_0</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Backgrounds\matrix_splash_1.png">
+      <Name>matrix_splash_1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Backgrounds\tetris_blocks_0.png">
+      <Name>tetris_blocks_0</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Backgrounds\tetris_blocks_1.png">
+      <Name>tetris_blocks_1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
