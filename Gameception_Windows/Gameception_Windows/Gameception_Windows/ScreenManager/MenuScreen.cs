@@ -137,8 +137,8 @@ namespace Gameception
             {
                 MenuEntry menuEntry = menuEntries[i];
 
-                // each entry is to be centered horizontally
-                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
+                // each entry is aligned to left
+                position.X = 7 * ScreenManager.GraphicsDevice.Viewport.Width / 8 - menuEntry.GetWidth(this);
 
                 if (ScreenState == ScreenState.TransitionOn)
                     position.X -= transitionOffset * 256;
@@ -149,7 +149,7 @@ namespace Gameception
                 menuEntry.Position = position;
 
                 // move down for the next entry the size of this entry
-                position.Y += menuEntry.GetHeight(this);
+                position.Y += ( menuEntry.GetHeight(this) + 10 );
             }
         }
 

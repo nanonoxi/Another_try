@@ -1,26 +1,21 @@
-﻿/// Merada Richter, 2013.07.28
-/// Based on GSMSample for Windows
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
 
 namespace Gameception
 {
-    /// <summary>
-    /// Sits behind all other menu screens as a background
-    /// </summary>
-    class BackgroundScreen : Screen
+    class SplashScreen : Screen
     {
         #region Attributes
 
         ContentManager content;
-        Texture2D backgroundTexture;
-
+        Texture2D splashTexture;
+        ScreenManager screenManager;
         #endregion
 
         #region Initialization
@@ -28,25 +23,20 @@ namespace Gameception
         /// <summary>
         /// Constructor.
         /// </summary>
-        public BackgroundScreen()
+        public SplashScreen(ScreenManager screenManager)
         {
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+
+            this.screenManager = screenManager;
         }
 
-        /// <summary>
-        /// Loads graphics content for this screen. The background texture is quite
-        /// big, so we use our own local ContentManager to load it. This allows us
-        /// to unload before going from the menus into the game itself, wheras if we
-        /// used the shared ContentManager provided by the Game class, the content
-        /// would remain loaded forever.
-        /// </summary>
         public override void LoadContent()
         {
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            backgroundTexture = content.Load<Texture2D>("Backgrounds/tetris_blocks_0");
+            splashTexture = content.Load<Texture2D>("Backgrounds/matrix_splash_0");
         }
 
 
@@ -60,18 +50,33 @@ namespace Gameception
 
         #endregion
 
-        #region Update
+        #region Handle Input
 
         /// <summary>
-        /// Updates the background screen. Unlike most screens, this should not
-        /// transition off even if it has been covered by another screen: it is
-        /// supposed to be covered, after all! This overload forces the
-        /// coveredByOtherScreen parameter to false in order to stop the base
-        /// Update method wanting to transition off.
+        /// Lets the game respond to player input. Unlike the Update method,
+        /// this will only be called when the gameplay screen is active.
         /// </summary>
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public override void HandleInput(InputState input)
         {
-            base.Update(gameTime, otherScreenHasFocus, false);
+            if (input == null)
+                throw new ArgumentNullException("input");
+
+            int playerIndex;
+            if (ControllingPlayer.HasValue)
+                playerIndex = (int)ControllingPlayer.Value;
+            else
+                playerIndex = 1;
+
+            KeyboardState keyboardState = input.CurrentKeyboardStates[playerIndex];
+            GamePadState gamePadState = input.CurrentGamePadStates[playerIndex];
+
+            if (keyboardState.GetPressedKeys().Length > 0) // if any key is pressed
+            {
+                //screenManager.AddScreen(new BackgroundScreen(), null);
+                //screenManager.AddScreen(new MainMenuScreen(), null);
+
+                LoadingScreen.Load(ScreenManager, true, null, new BackgroundScreen(), new MainMenuScreen());
+            }
         }
 
         #endregion
@@ -89,7 +94,7 @@ namespace Gameception
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(backgroundTexture, fullscreen,
+            spriteBatch.Draw(splashTexture, fullscreen,
                              new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
 
             spriteBatch.End();

@@ -123,6 +123,7 @@
     <Compile Include="ScreenManager\PlayerIndexEventArgs.cs" />
     <Compile Include="ScreenManager\Screen.cs" />
     <Compile Include="ScreenManager\ScreenManager.cs" />
+    <Compile Include="ScreenManager\SplashScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
