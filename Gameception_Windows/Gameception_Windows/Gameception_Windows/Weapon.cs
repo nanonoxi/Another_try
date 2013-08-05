@@ -53,6 +53,18 @@ namespace Gameception
             allProjectiles = new Collection<Projectile>();
         }
 
+        // Controls the fire of the weapon
+        public void fire(Camera gameCamera, Vector3 startPosition, Vector3 shotDirection)
+        {
+            if (elapsedFrames >= CooldownTime)
+            {
+                // Create projectile
+                allProjectiles.Add(new Projectile(ProjectileModel, 1.5f, 0, 10f, startPosition, 0.8f, gameCamera, shotDirection));
+
+                elapsedFrames = 0;
+            }
+        }
+
         // Update the state of the weapon
         public void Update()
         {
@@ -60,19 +72,10 @@ namespace Gameception
 
             foreach (Projectile proj in allProjectiles)
             {
-                proj.Update();
-            }
-        }
-
-        // Controls the fire of the weapon
-        public void fire(Camera gameCamera)
-        {
-            if (elapsedFrames >= CooldownTime)
-            {
-                // Create projectile
-                allProjectiles.Add(new Projectile(ProjectileModel,0.04f,0,10f,Vector3.Zero,0.8f,gameCamera,Vector3.UnitZ));
-
-                elapsedFrames = 0;
+                if (proj.Active)
+                {
+                    proj.Update();
+                }
             }
         }
 

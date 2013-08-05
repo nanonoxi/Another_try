@@ -16,6 +16,9 @@ namespace Gameception
         // The weapon used by this player
         Weapon playerWeapon;
 
+        // Stores the direction that the player is facing
+        Vector3 playerFacing;
+
         #region Properties
 
         public bool CanMove
@@ -30,21 +33,33 @@ namespace Gameception
             set { playerWeapon = value; }
         }
 
+        public Vector3 PlayerFacing
+        {
+            get { return playerFacing; }
+            set { playerFacing = value; }
+        }
+
         #endregion
 
-        public Player(Model model, float moveSpeed, int initialHealth, Vector3 startPosition, float scale, Camera camera, PlayerIndex player, int weaponCooldown)
+        public Player(Model model, float moveSpeed, int initialHealth, Vector3 startPosition, float scale, Camera camera, PlayerIndex player, Model projectileModel, int weaponCooldown)
             : base(model, moveSpeed, initialHealth, startPosition, scale, camera)
         {
             playerNumber = player;
 
-            //PlayerWeapon = new Weapon(weaponCooldown); // Send model of projectile as well, to fix the error
+            PlayerWeapon = new Weapon(weaponCooldown, projectileModel); // Send model of projectile as well, to fix the error
         }
 
         // Handles input from the user
         public void handleInput(KeyboardState keyboard, GamePadState gamepad)
         {
+            if (Position != PreviousPosition)
+            {
+                PlayerFacing = Position - PreviousPosition;
+            }
+
             PreviousPosition = Position;
 
+#if WINDOWS
             if (playerNumber == PlayerIndex.One)
             {
                 if (keyboard.IsKeyDown(Keys.W))
@@ -65,7 +80,7 @@ namespace Gameception
                 }
                 if (keyboard.IsKeyDown(Keys.Space))
                 {
-                    //PlayerWeapon.fire();
+                    PlayerWeapon.fire(this.GameCamera, this.Position, PlayerFacing);
                 }
             }
             else if (playerNumber == PlayerIndex.Two)
@@ -87,6 +102,68 @@ namespace Gameception
                     Position = Position + Vector3.UnitX * (-MovementSpeed);
                 }
             }
+
+#endif
+
+            ///// IF THE CODE BELOW DOES NOT WORK THEN I WILL TRY THIS /////
+            /*if (gamepad.ThumbSticks.Left.X > 0)
+            {
+                Position = Position + Vector3.UnitX * (-MovementSpeed);
+            }
+            if (gamepad.ThumbSticks.Left.X < 0)
+            {
+                Position = Position + Vector3.UnitX * MovementSpeed;
+            }
+            if (gamepad.ThumbSticks.Left.Y > 0)
+            {
+                Position = Position + Vector3.UnitZ * MovementSpeed;
+            }
+            if (gamepad.ThumbSticks.Left.Y < 0)
+            {
+                Position = Position + Vector3.UnitZ * (-MovementSpeed);
+            }*/
+            //////////////////////////////////////////////////////////////////
+
+#if XBOX
+            // GamePads are identified for each player before being sent to this class so if statements are not necessarry
+
+            if ((gamepad.ThumbSticks.Left.X != 0) && (gamepad.ThumbSticks.Left.Y != 0))
+            {
+                Position = new Vector3(gamepad.ThumbSticks.Left.X * MovementSpeed, Position.Y, gamepad.ThumbSticks.Left.Y);
+            }
+
+            // Fire a projectile
+            if (gamepad.Triggers.Right > 0)
+            {
+                PlayerWeapon.fire(this.GameCamera, this.Position, PlayerFacing);
+            }
+#endif
+        }
+
+        // Update this player
+        public void Update()
+        {
+            PlayerWeapon.Update();
+        }
+
+        // Draw the player
+        public override void Draw()
+        {
+            foreach (ModelMesh mesh in ObjectModel.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+
+                    effect.View = GameCamera.View;
+                    effect.Projection = GameCamera.Projection;
+                    effect.World = Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
+                }
+
+                mesh.Draw();
+            }
+
+            PlayerWeapon.Draw();
         }
     }
 }

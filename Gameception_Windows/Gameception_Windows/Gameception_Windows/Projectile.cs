@@ -39,6 +39,8 @@ namespace Gameception
         {
             DamageAmount = damageDone;
             direction = movementDirection;
+
+            TimeToLive = 120;
         }
 
         // Update the state of this projectile
@@ -52,7 +54,7 @@ namespace Gameception
             }
             else
             {
-                this.Position += direction*MovementSpeed;
+                this.Position = this.Position + MovementSpeed * direction;
             }
         }
     }

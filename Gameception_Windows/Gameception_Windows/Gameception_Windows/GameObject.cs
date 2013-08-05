@@ -101,18 +101,21 @@ namespace Gameception
         // Draw the model to the screen
         public virtual void Draw()
         {
-            foreach (ModelMesh mesh in ObjectModel.Meshes)
+            if (this.Active == true)
             {
-                foreach (BasicEffect effect in mesh.Effects)
+                foreach (ModelMesh mesh in ObjectModel.Meshes)
                 {
-                    effect.EnableDefaultLighting();
+                    foreach (BasicEffect effect in mesh.Effects)
+                    {
+                        effect.EnableDefaultLighting();
 
-                    effect.View = GameCamera.View;
-                    effect.Projection = GameCamera.Projection;
-                    effect.World = Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
+                        effect.View = GameCamera.View;
+                        effect.Projection = GameCamera.Projection;
+                        effect.World = Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
+                    }
+
+                    mesh.Draw();
                 }
-
-                mesh.Draw();
             }
         }
     }
