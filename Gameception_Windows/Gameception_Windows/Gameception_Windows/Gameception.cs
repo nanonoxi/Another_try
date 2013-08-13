@@ -32,6 +32,10 @@ namespace Gameception
             Content.RootDirectory = "Content";
 
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 1000; //1920;
+            graphics.PreferredBackBufferHeight = 600; //1080;
+            graphics.PreferMultiSampling = false;
+            //graphics.IsFullScreen = true;
 
             // Create the screen manager component.
             screenManager = new ScreenManager(this);
@@ -39,8 +43,7 @@ namespace Gameception
             Components.Add(screenManager);
 
             // Activate the first screens.
-            screenManager.AddScreen(new BackgroundScreen(), null);
-            screenManager.AddScreen(new MainMenuScreen(), null);
+            screenManager.AddScreen(new SplashScreen(screenManager), null);
         }
 
 
@@ -59,14 +62,9 @@ namespace Gameception
 
         #region Draw
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
         protected override void Draw(GameTime gameTime)
         {
             graphics.GraphicsDevice.Clear(Color.Black);
-
-            // The real drawing happens inside the screen manager component.
             base.Draw(gameTime);
         }
 
