@@ -46,7 +46,7 @@ namespace Gameception
         /// Constructor.
         /// </summary>
         public OptionsMenuScreen()
-            : base("Options")
+            : base("optionsmenu")
         {
             // Create our menu entries.
             ungulateMenuEntry = new MenuEntry(string.Empty);

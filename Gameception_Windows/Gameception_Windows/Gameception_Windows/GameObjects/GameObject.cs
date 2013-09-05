@@ -31,9 +31,6 @@ namespace Gameception
         // A reference to the camera. Needed for rendering
         private Camera gameCamera;
 
-        // Sets whether or not this object is active
-        private bool active;
-
         #region Properties
 
         public Model ObjectModel
@@ -78,12 +75,6 @@ namespace Gameception
             set { gameCamera = value; }
         }
 
-        public bool Active
-        {
-            get { return active; }
-            set { active = value; }
-        }
-
         #endregion
 
         public GameObject(Model model, float moveSpeed, int initialHealth, Vector3 startPosition, float scale, Camera camera)
@@ -94,28 +85,28 @@ namespace Gameception
             Position = startPosition;
             ScaleFactor = scale;
             GameCamera = camera;
+        }
 
-            Active = true;
+        public virtual void Update()
+        {
+            // do nothing
         }
 
         // Draw the model to the screen
         public virtual void Draw()
         {
-            if (this.Active == true)
+            foreach (ModelMesh mesh in ObjectModel.Meshes)
             {
-                foreach (ModelMesh mesh in ObjectModel.Meshes)
+                foreach (BasicEffect effect in mesh.Effects)
                 {
-                    foreach (BasicEffect effect in mesh.Effects)
-                    {
-                        effect.EnableDefaultLighting();
+                    effect.EnableDefaultLighting();
 
-                        effect.View = GameCamera.View;
-                        effect.Projection = GameCamera.Projection;
-                        effect.World = Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
-                    }
-
-                    mesh.Draw();
+                    effect.View = GameCamera.View;
+                    effect.Projection = GameCamera.Projection;
+                    effect.World = Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
                 }
+
+                mesh.Draw();
             }
         }
     }

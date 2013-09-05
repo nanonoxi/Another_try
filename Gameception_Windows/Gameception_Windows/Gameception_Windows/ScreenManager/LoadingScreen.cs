@@ -132,7 +132,7 @@ namespace Gameception
             if (loadingIsSlow)
             {
                 SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-                SpriteFont font = ScreenManager.Font;
+                SpriteFont font = ScreenManager.Menufont;
 
                 const string message = "Loading...";
 
