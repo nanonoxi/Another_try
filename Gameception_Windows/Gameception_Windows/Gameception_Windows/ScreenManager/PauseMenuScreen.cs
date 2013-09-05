@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Gameception
 {
@@ -15,7 +16,7 @@ namespace Gameception
         /// <summary>
         /// Constructor
         /// </summary>
-        public PauseMenuScreen() : base("Paused")
+        public PauseMenuScreen() : base("pausemenu")
         {
             // Create our menu entries.
             MenuEntry resumeGameMenuEntry = new MenuEntry("Resume Game");

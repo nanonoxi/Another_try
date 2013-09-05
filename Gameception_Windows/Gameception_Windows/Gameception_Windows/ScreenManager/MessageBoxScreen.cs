@@ -19,7 +19,10 @@ namespace Gameception
         #region Attributes
 
         string message;
+
         Texture2D gradientTexture;
+        Texture2D AbuttonTexture;
+        Texture2D BbuttonTexture;
 
         #endregion
 
@@ -45,13 +48,7 @@ namespace Gameception
         /// </summary>
         public MessageBoxScreen(string message, bool includeUsageText)
         {
-            const string usageText = "\nA button, Space, Enter = ok" +
-                                     "\nB button, Esc = cancel";
-
-            if (includeUsageText)
-                this.message = message + usageText;
-            else
-                this.message = message;
+            this.message = message;
 
             IsPopup = true;
 
@@ -69,7 +66,10 @@ namespace Gameception
         {
             ContentManager content = ScreenManager.Game.Content;
 
-            gradientTexture = content.Load<Texture2D>("Backgrounds/gradient");
+            gradientTexture = content.Load<Texture2D>("Backgrounds/messagebox");
+            AbuttonTexture = content.Load<Texture2D>("Controls/Abutton");
+            BbuttonTexture = content.Load<Texture2D>("Controls/Bbutton");
+
         }
 
         #endregion
@@ -116,7 +116,8 @@ namespace Gameception
         public override void Draw(GameTime gameTime)
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-            SpriteFont font = ScreenManager.Font;
+            SpriteFont font = ScreenManager.Msgboxfont;
+            font.LineSpacing = 50;
 
             // Darken down any other screens that were drawn beneath the popup.
             ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
@@ -126,6 +127,7 @@ namespace Gameception
             Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
             Vector2 textSize = font.MeasureString(message);
             Vector2 textPosition = (viewportSize - textSize) / 2;
+            Vector2 AbuttonPosition = new Vector2 (viewportSize.X / 2f - 140, viewportSize.Y / 2f);
 
             // The background includes a border somewhat larger than the text itself.
             const int hPad = 32;
@@ -134,18 +136,24 @@ namespace Gameception
             Rectangle backgroundRectangle = new Rectangle((int)textPosition.X - hPad,
                                                           (int)textPosition.Y - vPad,
                                                           (int)textSize.X + hPad * 2,
-                                                          (int)textSize.Y + vPad * 2);
+                                                          (int)textSize.Y * 2 + vPad * 2);
 
             // Fade the popup alpha during transitions.
             Color colour = Color.White * TransitionAlpha;
 
             spriteBatch.Begin();
 
-            // Draw the background rectangle.
+            // Draw the background rectangle
             spriteBatch.Draw(gradientTexture, backgroundRectangle, colour);
 
-            // Draw the message box text.
+            // Draw buttons
+            spriteBatch.Draw(AbuttonTexture, AbuttonPosition, colour);
+            spriteBatch.Draw(BbuttonTexture, AbuttonPosition + new Vector2(150, 0), colour);
+
+            // Draw text
             spriteBatch.DrawString(font, message, textPosition, colour);
+            spriteBatch.DrawString(font, "yes", AbuttonPosition + new Vector2(80, 20), colour);
+            spriteBatch.DrawString(font, "no", AbuttonPosition + new Vector2(230, 20), colour);
 
             spriteBatch.End(); 
         }
