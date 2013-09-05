@@ -29,6 +29,16 @@ namespace Gameception
         bool isInitialized;
 
         /// <summary>
+        /// Game the ScreenManager belongs to
+        /// </summary>
+        Gameception game;
+        public Gameception Game
+        {
+            get { return game; }
+            set { game = value; }
+        }
+
+        /// <summary>
         /// Default SpriteBatch shared by all Screens (Screens don't have
         /// to bother creating own local instances)
         /// </summary>
@@ -42,13 +52,40 @@ namespace Gameception
         /// <summary>
         /// Default font
         /// </summary>
-        SpriteFont font;
-        public SpriteFont Font
+        SpriteFont gamefont;
+        public SpriteFont Gamefont
         {
-            get { return font; }
+            get { return gamefont; }
         }
-        Texture2D blankTexture;
 
+        /// <summary>
+        /// Menu font
+        /// </summary>
+        SpriteFont menufont;
+        public SpriteFont Menufont
+        {
+            get { return menufont; }
+        }
+
+        /// <summary>
+        /// Title font
+        /// </summary>
+        SpriteFont titlefont;
+        public SpriteFont Titlefont
+        {
+            get { return titlefont; }
+        }
+
+        /// <summary>
+        /// Messagebox font
+        /// </summary>
+        SpriteFont msgboxfont;
+        public SpriteFont Msgboxfont
+        {
+            get { return msgboxfont; }
+        }
+
+        Texture2D blankTexture;
 
         /// <summary>
         /// Used for debugging: prints out list of all screens each time it's updated
@@ -67,9 +104,9 @@ namespace Gameception
         /// <summary>
         /// Constructor
         /// </summary>
-        public ScreenManager(Game game) : base(game)
+        public ScreenManager(Gameception game) : base(game)
         {
-            // nothing here yet
+            this.game = game;
         }
 
         public override void Initialize()
@@ -85,7 +122,10 @@ namespace Gameception
             ContentManager content = Game.Content;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = content.Load<SpriteFont>("Fonts/menufont");
+            gamefont = content.Load<SpriteFont>("Fonts/gamefont");
+            menufont = content.Load<SpriteFont>("Fonts/menufont");
+            titlefont = content.Load<SpriteFont>("Fonts/titlefont");
+            msgboxfont = content.Load<SpriteFont>("Fonts/msgboxfont");
             blankTexture = content.Load<Texture2D>("Backgrounds/blank");
 
             foreach (Screen screen in screens)

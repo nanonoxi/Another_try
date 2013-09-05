@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Gameception
 {
@@ -17,7 +18,7 @@ namespace Gameception
         /// Constructor
         /// </summary>
         public MainMenuScreen()
-            : base("Main Menu")
+            : base("mainmenu")
         {
             // Create our menu entries.
             MenuEntry playGameMenuEntry = new MenuEntry("New Game");
@@ -44,7 +45,8 @@ namespace Gameception
         /// </summary>
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen());
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new TemplateLevel());
+            //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen());
         }
 
         /// <summary>

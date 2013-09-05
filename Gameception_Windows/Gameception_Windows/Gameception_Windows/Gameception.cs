@@ -8,8 +8,11 @@ namespace Gameception
         #region Attributes
 
         GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager Graphics
+        {
+            get { return graphics; }
+        }
         ScreenManager screenManager;
-
 
         // By preloading any assets used by UI rendering, we avoid framerate glitches
         // when they suddenly need to be loaded in the middle of a menu transition.
@@ -23,7 +26,6 @@ namespace Gameception
 
         #region Initialization
 
-
         /// <summary>
         /// The main game constructor.
         /// </summary>
@@ -32,17 +34,15 @@ namespace Gameception
             Content.RootDirectory = "Content";
 
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1000; //1920;
-            graphics.PreferredBackBufferHeight = 600; //1080;
-            graphics.PreferMultiSampling = false;
-            //graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
+            graphics.PreferMultiSampling = true;
+            graphics.IsFullScreen = true;
 
-            // Create the screen manager component.
             screenManager = new ScreenManager(this);
-
             Components.Add(screenManager);
 
-            // Activate the first screens.
+            // Activate the first screens
             screenManager.AddScreen(new SplashScreen(screenManager), null);
         }
 

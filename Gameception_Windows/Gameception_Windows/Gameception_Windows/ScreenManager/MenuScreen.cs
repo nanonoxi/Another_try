@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace Gameception
 {
@@ -21,12 +22,19 @@ namespace Gameception
         }
 
         int selectedEntry = 0;
-        
+
         string menuTitle;
         public string MenuTitle
         {
             get { return menuTitle; }
             set { menuTitle = value; }
+        }
+        
+        Texture2D menuTitleTexture;
+        public Texture2D MenuTitleTexture
+        {
+            get { return menuTitleTexture; }
+            set { menuTitleTexture = value; }
         }
 
         #endregion
@@ -43,6 +51,13 @@ namespace Gameception
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5); 
+        }
+
+        public override void LoadContent()
+        {
+            ContentManager content = ScreenManager.Game.Content;
+            
+            menuTitleTexture = content.Load<Texture2D>("MenuTitles/" + menuTitle);
         }
 
         #endregion
@@ -129,8 +144,8 @@ namespace Gameception
             // the movement slow down as it nears the end).
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
-            // start at Y = 175; each X value is generated per entry
-            Vector2 position = new Vector2(0f, 175f);
+            // start at Y = 340; each X value is generated per entry
+            Vector2 position = new Vector2(0f, 380f);
 
             // update each menu entry's location in turn
             for (int i = 0; i < menuEntries.Count; i++)
@@ -184,7 +199,8 @@ namespace Gameception
 
             GraphicsDevice graphics = ScreenManager.GraphicsDevice;
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-            SpriteFont font = ScreenManager.Font;
+            //SpriteFont font = ScreenManager.Font;
+            SpriteFont titlefont = ScreenManager.Titlefont;
 
             spriteBatch.Begin();
 
@@ -204,15 +220,14 @@ namespace Gameception
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // Draw the menu title centered on the screen
-            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
-            Vector2 titleOrigin = font.MeasureString(menuTitle) / 2;
-            Color titleColor = new Color(192, 192, 192) * TransitionAlpha;
-            float titleScale = 1.25f;
+            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 140);
+            Vector2 titleOrigin = new Vector2(menuTitleTexture.Width / 2, MenuTitleTexture.Height / 2);
+            Color titleColor = Color.White * TransitionAlpha;
 
             titlePosition.Y -= transitionOffset * 100;
 
-            spriteBatch.DrawString(font, menuTitle, titlePosition, titleColor, 0,
-                                   titleOrigin, titleScale, SpriteEffects.None, 0);
+            //spriteBatch.DrawString(titlefont, menuTitle, titlePosition, titleColor, 0, titleOrigin, titleScale, SpriteEffects.None, 0);
+            spriteBatch.Draw(menuTitleTexture, titlePosition, null, titleColor, 0.0f, titleOrigin, 1.0f, SpriteEffects.None, 0.0f);
 
             spriteBatch.End();
         }
