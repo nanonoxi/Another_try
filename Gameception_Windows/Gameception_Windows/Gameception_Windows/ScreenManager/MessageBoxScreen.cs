@@ -23,6 +23,8 @@ namespace Gameception
         Texture2D gradientTexture;
         Texture2D AbuttonTexture;
         Texture2D BbuttonTexture;
+        Texture2D ENTERbuttonTexture;
+        Texture2D ESCAPEbuttonTexture;
 
         #endregion
 
@@ -69,7 +71,8 @@ namespace Gameception
             gradientTexture = content.Load<Texture2D>("Backgrounds/messagebox");
             AbuttonTexture = content.Load<Texture2D>("Controls/Abutton");
             BbuttonTexture = content.Load<Texture2D>("Controls/Bbutton");
-
+            ENTERbuttonTexture = content.Load<Texture2D>("Controls/ENTERbutton");
+            ESCAPEbuttonTexture = content.Load<Texture2D>("Controls/ESCAPEbutton");
         }
 
         #endregion
@@ -127,7 +130,6 @@ namespace Gameception
             Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
             Vector2 textSize = font.MeasureString(message);
             Vector2 textPosition = (viewportSize - textSize) / 2;
-            Vector2 AbuttonPosition = new Vector2 (viewportSize.X / 2f - 140, viewportSize.Y / 2f);
 
             // The background includes a border somewhat larger than the text itself.
             const int hPad = 32;
@@ -146,14 +148,28 @@ namespace Gameception
             // Draw the background rectangle
             spriteBatch.Draw(gradientTexture, backgroundRectangle, colour);
 
-            // Draw buttons
-            spriteBatch.Draw(AbuttonTexture, AbuttonPosition, colour);
-            spriteBatch.Draw(BbuttonTexture, AbuttonPosition + new Vector2(150, 0), colour);
-
             // Draw text
             spriteBatch.DrawString(font, message, textPosition, colour);
-            spriteBatch.DrawString(font, "yes", AbuttonPosition + new Vector2(80, 20), colour);
-            spriteBatch.DrawString(font, "no", AbuttonPosition + new Vector2(230, 20), colour);
+
+            // Draw controls specific to platform
+#if WINDOWS
+            Vector2 controlsPosition = new Vector2(viewportSize.X / 2f - 180, viewportSize.Y / 2f + 20);
+
+            spriteBatch.Draw(ENTERbuttonTexture, controlsPosition, colour);
+            spriteBatch.Draw(ESCAPEbuttonTexture, controlsPosition + new Vector2(200, 0), colour);
+
+            spriteBatch.DrawString(font, "yes", controlsPosition + new Vector2(135, 2), colour);
+            spriteBatch.DrawString(font, "no", controlsPosition + new Vector2(335, 2), colour);
+
+#else
+            Vector2 controlsPosition = new Vector2 (viewportSize.X / 2f - 140, viewportSize.Y / 2f);
+
+            spriteBatch.Draw(AbuttonTexture, controlsPosition, colour);
+            spriteBatch.Draw(BbuttonTexture, controlsPosition + new Vector2(150, 0), colour);
+
+            spriteBatch.DrawString(font, "yes", controlsPosition + new Vector2(80, 20), colour);
+            spriteBatch.DrawString(font, "no", controlsPosition + new Vector2(230, 20), colour);
+#endif
 
             spriteBatch.End(); 
         }
