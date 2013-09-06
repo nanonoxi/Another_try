@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Media;
 
 namespace Gameception
 {
@@ -36,6 +37,16 @@ namespace Gameception
         {
             get { return game; }
             set { game = value; }
+        }
+
+        /// <summary>
+        /// SoundManager belonging to the screenManager
+        /// </summary>
+        SoundManager soundManager;
+        public SoundManager SoundManager
+        {
+            get { return soundManager; }
+            set { soundManager = value; }
         }
 
         /// <summary>
@@ -118,15 +129,21 @@ namespace Gameception
 
         protected override void LoadContent()
         {
-            // Load content belonging to the screen manager.
             ContentManager content = Game.Content;
 
+            // Load content belonging to the screen manager.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gamefont = content.Load<SpriteFont>("Fonts/gamefont");
             menufont = content.Load<SpriteFont>("Fonts/menufont");
             titlefont = content.Load<SpriteFont>("Fonts/titlefont");
             msgboxfont = content.Load<SpriteFont>("Fonts/msgboxfont");
             blankTexture = content.Load<Texture2D>("Backgrounds/blank");
+
+            // Load content belonging to the sound manager.
+            // Load extra sounds as needed per level in each level class by using
+            // this.ScreenManager.SoundManager.add(content.Load<>(),"");
+            soundManager = new SoundManager();
+            soundManager.add(content.Load<Song>("Sounds/for_the_lost_lenore"), "title");
 
             foreach (Screen screen in screens)
             {
@@ -193,6 +210,8 @@ namespace Gameception
                         coveredByOtherScreen = true;
                 }
             }
+
+            soundManager.Update();
 
             // Print debug trace?
             if (traceEnabled)

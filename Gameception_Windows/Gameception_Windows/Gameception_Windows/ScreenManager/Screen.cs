@@ -107,13 +107,23 @@ namespace Gameception
         }
 
         /// <summary>
-        /// Manager that screen belongs to
+        /// ScreenManager that screen belongs to
         /// </summary>
         ScreenManager screenManager;
         public ScreenManager ScreenManager
         {
             get { return screenManager; }
             internal set { screenManager = value; }
+        }
+
+        /// <summary>
+        /// SoundManager the screen interacts with
+        /// </summary>
+        SoundManager soundManager;
+        public SoundManager SoundManager
+        {
+            get { return soundManager; }
+            internal set { soundManager = value; }
         }
 
         /// <summary>

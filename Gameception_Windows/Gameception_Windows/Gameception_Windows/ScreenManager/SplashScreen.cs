@@ -50,7 +50,13 @@ namespace Gameception
 
         #endregion
 
-        #region Handle Input
+        #region Update
+
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        {
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+            screenManager.SoundManager.play("title");
+        }
 
         /// <summary>
         /// Lets the game respond to player input. Unlike the Update method,
