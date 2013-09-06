@@ -14,7 +14,6 @@ namespace Gameception
 
         // player control keys
         Keys Up, Right, Down, Left, Fire;
-        KeyboardState oldKeyboard = Keyboard.GetState();
 
         // Indicates whether the players are allowed to move, this is based on the distance between them
         private bool canMove;
@@ -71,31 +70,20 @@ namespace Gameception
 
             PreviousPosition = Position;
 
-            if ((keyboard.IsKeyDown(Up)
-                  && !keyboard.IsKeyDown(Down)
-                  && !oldKeyboard.IsKeyDown(Up))
-                  || (gamepad.ThumbSticks.Left.Y > 0))
+            if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
             {
                 Position = Position + Vector3.UnitZ * MovementSpeed;
             }
-            else if ((keyboard.IsKeyDown(Right)
-                  && !keyboard.IsKeyDown(Left)
-                  && !oldKeyboard.IsKeyDown(Right))
-                  || (gamepad.ThumbSticks.Left.X > 0))
-            {
-                Position = Position + Vector3.UnitX * (-MovementSpeed);
-            }
-            else if ((keyboard.IsKeyDown(Down)
-                  && !keyboard.IsKeyDown(Up)
-                  && !oldKeyboard.IsKeyDown(Down))
-                  || (gamepad.ThumbSticks.Left.Y < 0))
+            if (keyboard.IsKeyDown(Down) || (gamepad.ThumbSticks.Left.Y < 0))
             {
                 Position = Position + Vector3.UnitZ * (-MovementSpeed);
             }
-            else if ((keyboard.IsKeyDown(Left)
-                  && !keyboard.IsKeyDown(Right)
-                  && !oldKeyboard.IsKeyDown(Left))
-                  || (gamepad.ThumbSticks.Left.X < 0))
+
+            if (keyboard.IsKeyDown(Right) || (gamepad.ThumbSticks.Left.X > 0))
+            {
+                Position = Position + Vector3.UnitX * (-MovementSpeed);
+            }
+            if (keyboard.IsKeyDown(Left) || (gamepad.ThumbSticks.Left.X < 0))
             {
                 Position = Position + Vector3.UnitX * MovementSpeed;
             }
