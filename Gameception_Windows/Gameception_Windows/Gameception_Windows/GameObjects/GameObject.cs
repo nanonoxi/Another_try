@@ -106,8 +106,8 @@ namespace Gameception
         // Draw the model to the screen
         public virtual void Draw()
         {
-            /*Matrix [] transforms = new Matrix[ObjectModel.Bones.Count];
-            ObjectModel.CopyBoneTransformsTo(transforms);*/
+            Matrix [] transforms = new Matrix[ObjectModel.Bones.Count];
+            ObjectModel.CopyBoneTransformsTo(transforms);
 
             // Only draw a gameObject if it's active
             if (Active)
@@ -120,7 +120,7 @@ namespace Gameception
 
                         effect.View = GameCamera.View;
                         effect.Projection = GameCamera.Projection;
-                        effect.World = /*transforms[mesh.ParentBone.Index] **/ Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
+                        effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
                     }
 
                     mesh.Draw();
