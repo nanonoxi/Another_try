@@ -56,7 +56,7 @@ namespace Gameception
             player1 = new Player(content.Load<Model>("Models/cortex_model"), 0.1f, 100, new Vector3(5, 3.5f, 0), 0.2f, camera, PlayerIndex.One);
             player1.setKeys(Keys.W, Keys.D, Keys.S, Keys.A, Keys.Space, PlayerIndex.One);
 
-            player2 = new Player(content.Load<Model>("Models/npcModel"), 0.1f, 100, new Vector3(-5, 0, 0), 0.8f, camera, PlayerIndex.Two);
+            player2 = new Player(content.Load<Model>("Models/npcModel"), 0.1f, 100, new Vector3(-5, 4f, 0), 0.6f, camera, PlayerIndex.Two);
             player2.setKeys(Keys.Up, Keys.Right, Keys.Down, Keys.Left, Keys.NumPad0, PlayerIndex.Two);
 
             // reset game time after loading all assets
@@ -136,6 +136,12 @@ namespace Gameception
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
+
+            // Ensures that models are drawn at correct depth
+            DepthStencilState depth = new DepthStencilState();
+            depth.DepthBufferEnable = true;
+
+            ScreenManager.GraphicsDevice.DepthStencilState = depth;
 
             ground.Draw();
             player1.Draw();

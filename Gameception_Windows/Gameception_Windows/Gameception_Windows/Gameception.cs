@@ -65,6 +65,7 @@ namespace Gameception
         protected override void Draw(GameTime gameTime)
         {
             graphics.GraphicsDevice.Clear(Color.Black);
+            screenManager.Draw(gameTime);
             base.Draw(gameTime);
         }
 
