@@ -15,12 +15,30 @@ namespace Gameception
         // player control keys
         Keys Up, Right, Down, Left, Fire;
 
+        // The direction the player is facing, used for firing weapons
+        Vector3 playerFacing;
+
+        // The weapon used by this player
+        Weapon playerWeapon;
+
         // Indicates whether the players are allowed to move, this is based on the distance between them
         private bool canMove;
         public bool CanMove
         {
             get { return canMove; }
             set { canMove = value; }
+        }
+
+        public Vector3 PlayerFacing
+        {
+            get { return playerFacing; }
+            set { playerFacing = value; }
+        }
+
+        public Weapon PlayerWeapon
+        {
+            get { return playerWeapon; }
+            set { playerWeapon = value; }
         }
 
         #endregion
@@ -50,6 +68,8 @@ namespace Gameception
             Left = l;
             Fire = f;
             playerIndex = i;
+
+            PlayerWeapon = null;
         }
 
         #endregion
@@ -58,15 +78,22 @@ namespace Gameception
 
         public override void Update()
         {
+            if (PlayerWeapon != null)
+            {
+                PlayerWeapon.Update();
+            }
             base.Update();
-
-            // insert updating code here
         }
 
         public void HandleInput()
         {
             KeyboardState keyboard = Keyboard.GetState();
             GamePadState gamepad = GamePad.GetState(playerIndex);
+
+            if (Position != PreviousPosition)
+            {
+                PlayerFacing = Position - PreviousPosition;
+            }
 
             PreviousPosition = Position;
 
@@ -87,6 +114,24 @@ namespace Gameception
             {
                 Position = Position + Vector3.UnitX * MovementSpeed;
             }
+
+            if (keyboard.IsKeyDown(Fire) || (gamepad.Triggers.Right > 0))
+            {
+                PlayerWeapon.fire(GameCamera, Position, PlayerFacing);
+            }
+        }
+
+        #endregion
+
+        #region Draw
+
+        public override void Draw()
+        {
+            if (PlayerWeapon != null)
+            {
+                PlayerWeapon.Draw();
+            }
+            base.Draw();
         }
 
         #endregion

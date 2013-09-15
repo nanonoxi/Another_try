@@ -55,6 +55,8 @@ namespace Gameception
             // to allow for weapon specialization
             player1 = new Player(content.Load<Model>("Models/cortex_model"), 0.1f, 100, new Vector3(5, 3.5f, 0), 0.2f, camera, PlayerIndex.One);
             player1.setKeys(Keys.W, Keys.D, Keys.S, Keys.A, Keys.Space, PlayerIndex.One);
+            Weapon player1Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"));
+            player1.PlayerWeapon = player1Weapon;
 
             player2 = new Player(content.Load<Model>("Models/npcModel"), 0.1f, 100, new Vector3(-5, 4f, 0), 0.6f, camera, PlayerIndex.Two);
             player2.setKeys(Keys.Up, Keys.Right, Keys.Down, Keys.Left, Keys.NumPad0, PlayerIndex.Two);
