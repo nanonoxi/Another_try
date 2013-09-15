@@ -82,6 +82,7 @@ namespace Gameception
             {
                 PlayerWeapon.Update();
             }
+
             base.Update();
         }
 

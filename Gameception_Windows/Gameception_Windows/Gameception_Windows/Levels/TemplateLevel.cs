@@ -60,6 +60,8 @@ namespace Gameception
 
             player2 = new Player(content.Load<Model>("Models/npcModel"), 0.1f, 100, new Vector3(-5, 4f, 0), 0.6f, camera, PlayerIndex.Two);
             player2.setKeys(Keys.Up, Keys.Right, Keys.Down, Keys.Left, Keys.NumPad0, PlayerIndex.Two);
+            Weapon player2Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"));
+            player2.PlayerWeapon = player2Weapon;
 
             // reset game time after loading all assets
             ScreenManager.Game.ResetElapsedTime();

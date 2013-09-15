@@ -98,6 +98,26 @@ namespace Gameception
             Active = true; // Active by default
         }
 
+        // Create and return a bounding sphere for this game object
+        public BoundingSphere getBoundingShpere()
+        {
+            BoundingSphere objectBoundingShere = new BoundingSphere();
+
+            foreach (ModelMesh mesh in ObjectModel.Meshes)
+            {
+                if (objectBoundingShere.Radius == 0) // If this is the first mesh
+                {
+                    objectBoundingShere = mesh.BoundingSphere;
+                }
+                else
+                {
+                    objectBoundingShere = BoundingSphere.CreateMerged(objectBoundingShere, mesh.BoundingSphere);
+                }
+            }
+
+            return objectBoundingShere;
+        }
+
         public virtual void Update()
         {
             // do nothing
