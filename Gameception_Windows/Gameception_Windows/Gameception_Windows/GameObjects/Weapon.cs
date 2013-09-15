@@ -42,6 +42,12 @@ namespace Gameception
             set { projectileModel = value; }
         }
 
+        public Collection<Projectile> AllProjectiles
+        {
+            get { return allProjectiles; }
+            set { allProjectiles = value; }
+        }
+
         #endregion
 
         public Weapon(float cooldown, Model modelOfProjectile)

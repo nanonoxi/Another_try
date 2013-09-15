@@ -40,6 +40,9 @@ namespace Gameception
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
 
+        // Needs to move
+        GameObject tempObstacle;
+
         public override void LoadContent()
         {
             camera = new Camera(this.ScreenManager.Game.Graphics);
@@ -62,6 +65,8 @@ namespace Gameception
             player2.setKeys(Keys.Up, Keys.Right, Keys.Down, Keys.Left, Keys.NumPad0, PlayerIndex.Two);
             Weapon player2Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"));
             player2.PlayerWeapon = player2Weapon;
+
+            tempObstacle = new GameObject(content.Load<Model>("Models/Cylinder"), 0, 100, new Vector3(0, 4f, 15), 0.5f, camera);
 
             // reset game time after loading all assets
             ScreenManager.Game.ResetElapsedTime();
@@ -93,6 +98,19 @@ namespace Gameception
             {
                 player1.Update();
                 player2.Update();
+
+                tempObstacle.Update();
+                
+                // THIS CODE SHOULD BE MOVED
+                // This is not working correctly yet
+                foreach (Projectile p in player2.PlayerWeapon.AllProjectiles)
+                {
+                    if (p.getBoundingShpere().Intersects(tempObstacle.getBoundingShpere()))
+                    {
+                        p.Active = false;
+                        tempObstacle.Position = player2.Position;
+                    }
+                }
                 
                 camera.Update(player1, player2);
             }
@@ -150,6 +168,8 @@ namespace Gameception
             ground.Draw();
             player1.Draw();
             player2.Draw();
+
+            tempObstacle.Draw();
 
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
