@@ -125,6 +125,23 @@ namespace Gameception
 
 
         /// <summary>
+        /// Checks for a "start" input action.
+        /// The controllingPlayer parameter specifies which player to read input for.
+        /// If this is null, it will accept input from any player. When the action
+        /// is detected, the output playerIndex reports which player pressed it.
+        /// </summary>
+        public bool IsStart(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+
+            return IsNewKeyPress(Keys.Space, controllingPlayer, out playerIndex) ||
+                   IsNewKeyPress(Keys.Enter, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.A, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.Start, controllingPlayer, out playerIndex);
+        }
+
+
+        /// <summary>
         /// Checks for a "menu select" input action.
         /// The controllingPlayer parameter specifies which player to read input for.
         /// If this is null, it will accept input from any player. When the action
@@ -196,6 +213,17 @@ namespace Gameception
             return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex) ||
                    IsNewButtonPress(Buttons.Back, controllingPlayer, out playerIndex) ||
                    IsNewButtonPress(Buttons.Start, controllingPlayer, out playerIndex);
+        }
+
+
+        /// <summary>
+        /// Checks for an "end game" input action.
+        /// </summary>
+        public bool IsLoseGame(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+
+            return IsNewKeyPress(Keys.Z, controllingPlayer, out playerIndex);
         }
 
         #endregion

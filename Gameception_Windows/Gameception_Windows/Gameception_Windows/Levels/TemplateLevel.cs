@@ -147,6 +147,10 @@ namespace Gameception
             {
                 ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
             }
+            else if (input.IsLoseGame(ControllingPlayer))
+            {
+                ScreenManager.AddScreen(new GameOverScreen(), ControllingPlayer);
+            }
             else
             {
                 player1.HandleInput();
