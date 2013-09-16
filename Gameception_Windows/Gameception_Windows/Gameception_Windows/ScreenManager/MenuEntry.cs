@@ -122,7 +122,7 @@ namespace Gameception
         /// <param name="gameTime"></param>
         public virtual void Draw(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
-            // draw selected entry in _, otherwise _
+            // draw selected entry in LightGreen, otherwise Gray
             Color colour = isSelected ? Color.LightGreen : Color.Gray;
             colour *= screen.TransitionAlpha;
 
