@@ -2,20 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Gameception
 {
-    class SplashScreen : Screen
+    class GameOverScreen : Screen
     {
         #region Attributes
  
-        ScreenManager screenManager;
-        ContentManager content;
-        Texture2D splashTexture;
+        Texture2D gameOverTitleTexture;
         Texture2D startTexture;
         int textAlpha = 55;
         int fadeIncrement = 5;
@@ -28,36 +26,23 @@ namespace Gameception
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SplashScreen(ScreenManager screenManager)
+        public GameOverScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
-
-            this.screenManager = screenManager;
         }
 
         public override void LoadContent()
         {
-            if (content == null)
-                content = new ContentManager(ScreenManager.Game.Services, "Content");
+            ContentManager content = ScreenManager.Game.Content;
 
-            splashTexture = content.Load<Texture2D>("Backgrounds/matrix_splash_0");
-
+            gameOverTitleTexture = content.Load<Texture2D>("MenuTitles/gameover");
 
 #if WINDOWS
             startTexture = content.Load<Texture2D>("MenuTitles/pressEnter");
 #else
             startTexture = content.Load<Texture2D>("MenuTitles/pressStart");
 #endif
-        }
-
-
-        /// <summary>
-        /// Unloads graphics content for this screen.
-        /// </summary>
-        public override void UnloadContent()
-        {
-            content.Unload();
         }
 
         #endregion
@@ -94,7 +79,7 @@ namespace Gameception
 
             if (input.IsStart(ControllingPlayer))
             {
-                LoadingScreen.Load(ScreenManager, true, null, new BackgroundScreen(), new MainMenuScreen());
+                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new EndGameScreen());
             }
         }
 
@@ -109,18 +94,24 @@ namespace Gameception
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-            Rectangle fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);
-
-            // text "pressy any key to continue / press start
-            Color colour = new Color (textAlpha, textAlpha, textAlpha);
-            colour *= TransitionAlpha;
-            Vector2 textOrigin = new Vector2((viewport.Width - startTexture.Width) / 2, viewport.Height - ( startTexture.Height * 2));
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(splashTexture, fullscreen,
-                             new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
-            spriteBatch.Draw(startTexture, textOrigin,colour);
+            // Draw the menu title centered on the screen
+            Vector2 titlePosition = new Vector2(viewport.Width / 2, viewport.Height / 2);
+            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+            titlePosition.Y -= transitionOffset * 100;
+            Vector2 titleOrigin = new Vector2(gameOverTitleTexture.Width / 2, gameOverTitleTexture.Height / 2);
+            Color titleColor = Color.White * TransitionAlpha;
+
+            spriteBatch.Draw(gameOverTitleTexture, titlePosition, null, titleColor, 0.0f, titleOrigin, 1.0f, SpriteEffects.None, 0.0f);
+
+            // text "press any key to continue / press start"
+            Color colour = new Color(textAlpha, textAlpha, textAlpha);
+            colour *= TransitionAlpha;
+            Vector2 textOrigin = new Vector2((viewport.Width - startTexture.Width) / 2, viewport.Height - (startTexture.Height * 2));
+
+            spriteBatch.Draw(startTexture, textOrigin, colour);
 
             spriteBatch.End();
         }

@@ -113,12 +113,14 @@
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="GameObjects\Projectile.cs" />
+    <Compile Include="GameObjects\PushPullObject.cs" />
     <Compile Include="GameObjects\Weapon.cs" />
     <Compile Include="Levels\TemplateLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ScreenManager\BackgroundScreen.cs" />
     <Compile Include="ScreenManager\EndGameScreen.cs" />
+    <Compile Include="ScreenManager\GameOverScreen.cs" />
     <Compile Include="ScreenManager\GameplayScreen.cs" />
     <Compile Include="ScreenManager\InputState.cs" />
     <Compile Include="ScreenManager\LoadingScreen.cs" />

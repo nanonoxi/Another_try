@@ -41,7 +41,7 @@ namespace Gameception
         }
 
         // Needs to move
-        GameObject tempObstacle;
+        PushPullObject tempObstacle;
 
         public override void LoadContent()
         {
@@ -51,12 +51,12 @@ namespace Gameception
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
             gameFont = content.Load<SpriteFont>("Fonts/gamefont");
-            ground = new GameObject(content.Load<Model>("Models/Ground"), 0, 0, Vector3.Zero, 0.001f, camera);
+            ground = new GameObject(content.Load<Model>("Models/crash_level"), 0, 0, Vector3.Zero, 6f, camera);
             
             // player set up should move
             // also, perhaps two separate player objects for Player1 and NPC, inheriting from class Player,
             // to allow for weapon specialization
-            player1 = new Player(content.Load<Model>("Models/cortex_model"), 0.1f, 100, new Vector3(5, 0, 3.5f), 0.2f, camera, PlayerIndex.One);
+            player1 = new Player(content.Load<Model>("Models/player1"), 0.1f, 100, new Vector3(5, 3.5f, 0), 3.5f, camera, PlayerIndex.One);
             player1.setKeys(Keys.W, Keys.D, Keys.S, Keys.A, Keys.Space, PlayerIndex.One);
             Weapon player1Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"));
             player1.PlayerWeapon = player1Weapon;
@@ -66,7 +66,7 @@ namespace Gameception
             Weapon player2Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"));
             player2.PlayerWeapon = player2Weapon;
 
-            tempObstacle = new GameObject(content.Load<Model>("Models/Cylinder"), 0, 100, new Vector3(0, 4f, 15), 0.5f, camera);
+            tempObstacle = new PushPullObject(content.Load<Model>("Models/Cylinder"), 0.4f, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
 
             // reset game time after loading all assets
             ScreenManager.Game.ResetElapsedTime();
@@ -101,18 +101,24 @@ namespace Gameception
 
                 tempObstacle.Update();
                 
-                // THIS CODE SHOULD BE MOVED
-                // This is not working correctly yet
-                foreach (Projectile p in player2.PlayerWeapon.AllProjectiles)
-                {
-                    if (p.getBoundingShpere().Intersects(tempObstacle.getBoundingShpere()))
-                    {
-                        p.Active = false;
-                        tempObstacle.Position = player2.Position;
-                    }
-                }
-                
                 camera.Update(player1, player2);
+            }
+
+            checkCollisions();
+        }
+
+        // Temp collision detection
+        public void checkCollisions()
+        {
+            // This is not working correctly yet
+            foreach (Projectile p in player2.PlayerWeapon.AllProjectiles)
+            {
+                if (p.getBoundingShpere().Intersects(tempObstacle.getBoundingShpere()))
+                {
+                    p.Active = false;
+                    //tempObstacle.Position = player2.Position;
+                    tempObstacle.pull(player2.Position, player2);
+                }
             }
         }
 
@@ -140,6 +146,10 @@ namespace Gameception
             if (input.IsPauseGame(ControllingPlayer) || gamePadDisconnected)
             {
                 ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+            }
+            else if (input.IsLoseGame(ControllingPlayer))
+            {
+                ScreenManager.AddScreen(new GameOverScreen(), ControllingPlayer);
             }
             else
             {

@@ -27,22 +27,14 @@ namespace Gameception
         {
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5); 
-/*            // Create our menu entries.
-            MenuEntry mainMenuEntry = new MenuEntry("Main Menu");
-
-            // Hook up menu event handlers.
-            mainMenuEntry.Selected += QuitGameMenuEntrySelected;
-
-            // Add entries to the menu.
-            MenuEntries.Add(mainMenuEntry);
- */       }
+        }
 
         public override void LoadContent()
         {
             ContentManager content = ScreenManager.Game.Content;
 
             titleTexture = content.Load<Texture2D>("MenuTitles/endgamemenu");
-            backgroundTexture = content.Load<Texture2D>("Backgrounds/tetris_heart");
+            backgroundTexture = content.Load<Texture2D>("Backgrounds/tetris_blocks_1");
         }
 
         #endregion
@@ -65,27 +57,18 @@ namespace Gameception
 
             if (keyboardState.GetPressedKeys().Length > 0) // if any key is pressed
             {
-                LoadingScreen.Load(ScreenManager, true, null, new BackgroundScreen(), new MainMenuScreen());
+                const string message = "Do you want to return to the main menu?";
+                MessageBoxScreen confirmQuitMessageBox = new MessageBoxScreen(message);
+
+                confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;
+
+                ScreenManager.AddScreen(confirmQuitMessageBox, ControllingPlayer);
             }
         }
 
         /// <summary>
-        /// Event handler for when the Quit Game menu entry is selected.
-        /// </summary>
-        void QuitGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
-        {
-            const string message = "Do you want to return to the main menu?";
-
-            MessageBoxScreen confirmQuitMessageBox = new MessageBoxScreen(message);
-
-            confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;
-
-            ScreenManager.AddScreen(confirmQuitMessageBox, ControllingPlayer);
-        }
-
-        /// <summary>
-        /// Event handler for when the user selects ok on the "are you sure
-        /// you want to quit" message box. This uses the loading screen to
+        /// Event handler for when the user selects ok on the "Do you want to return to the
+        /// main menu" message box. This uses the loading screen to
         /// transition from the game back to the main menu screen.
         /// </summary>
         void ConfirmQuitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
@@ -95,6 +78,7 @@ namespace Gameception
         }
 
         #endregion
+
         #region Draw
 
         /// <summary>
@@ -102,23 +86,21 @@ namespace Gameception
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            GraphicsDevice graphics = ScreenManager.GraphicsDevice;
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+            Rectangle fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);
 
-            spriteBatch.Begin();
-
-            // Make the menu slide into place during transitions, using a
-            // power curve to make things look more interesting (this makes
-            // the movement slow down as it nears the end).
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
-            // Draw the menu title centered on the screen
-            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 140);
+            Vector2 titlePosition = new Vector2(viewport.Width / 2, 140);
             Vector2 titleOrigin = new Vector2(titleTexture.Width / 2, titleTexture.Height / 2);
             Color titleColor = Color.White * TransitionAlpha;
 
             titlePosition.Y -= transitionOffset * 100;
 
+            spriteBatch.Begin();
+
+            spriteBatch.Draw(backgroundTexture, fullscreen, new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
             spriteBatch.Draw(titleTexture, titlePosition, null, titleColor, 0.0f, titleOrigin, 1.0f, SpriteEffects.None, 0.0f);
 
             spriteBatch.End();

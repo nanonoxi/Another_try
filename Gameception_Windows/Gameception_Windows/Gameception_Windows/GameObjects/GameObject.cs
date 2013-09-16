@@ -115,6 +115,9 @@ namespace Gameception
                 }
             }
 
+            objectBoundingShere.Center = Position;
+            objectBoundingShere.Radius *= ScaleFactor;
+
             return objectBoundingShere;
         }
 
@@ -127,7 +130,7 @@ namespace Gameception
         public virtual void Draw()
         {
             Matrix [] transforms = new Matrix[ObjectModel.Bones.Count];
-            ObjectModel.CopyBoneTransformsTo(transforms);
+            ObjectModel.CopyAbsoluteBoneTransformsTo(transforms);
 
             // Only draw a gameObject if it's active
             if (Active)
