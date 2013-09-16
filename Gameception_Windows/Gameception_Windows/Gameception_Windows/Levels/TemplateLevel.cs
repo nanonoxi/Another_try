@@ -41,7 +41,7 @@ namespace Gameception
         }
 
         // Needs to move
-        GameObject tempObstacle;
+        PushPullObject tempObstacle;
 
         public override void LoadContent()
         {
@@ -66,7 +66,7 @@ namespace Gameception
             Weapon player2Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"));
             player2.PlayerWeapon = player2Weapon;
 
-            tempObstacle = new GameObject(content.Load<Model>("Models/Cylinder"), 0, 100, new Vector3(0, 4f, 15), 0.5f, camera);
+            tempObstacle = new PushPullObject(content.Load<Model>("Models/Cylinder"), 0, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
 
             // reset game time after loading all assets
             ScreenManager.Game.ResetElapsedTime();
