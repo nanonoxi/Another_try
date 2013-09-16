@@ -115,6 +115,9 @@ namespace Gameception
                 }
             }
 
+            objectBoundingShere.Center = Position;
+            objectBoundingShere.Radius *= ScaleFactor;
+
             return objectBoundingShere;
         }
 

@@ -101,18 +101,23 @@ namespace Gameception
 
                 tempObstacle.Update();
                 
-                // THIS CODE SHOULD BE MOVED
-                // This is not working correctly yet
-                foreach (Projectile p in player2.PlayerWeapon.AllProjectiles)
-                {
-                    if (p.getBoundingShpere().Intersects(tempObstacle.getBoundingShpere()))
-                    {
-                        p.Active = false;
-                        tempObstacle.Position = player2.Position;
-                    }
-                }
-                
                 camera.Update(player1, player2);
+            }
+
+            checkCollisions();
+        }
+
+        // Temp collision detection
+        public void checkCollisions()
+        {
+            // This is not working correctly yet
+            foreach (Projectile p in player2.PlayerWeapon.AllProjectiles)
+            {
+                if (p.getBoundingShpere().Intersects(tempObstacle.getBoundingShpere()))
+                {
+                    p.Active = false;
+                    tempObstacle.Position = player2.Position;
+                }
             }
         }
 
