@@ -40,6 +40,9 @@ namespace Gameception
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
 
+        // Needs to move
+        GameObject tempObstacle;
+
         public override void LoadContent()
         {
             camera = new Camera(this.ScreenManager.Game.Graphics);
@@ -55,9 +58,15 @@ namespace Gameception
             // to allow for weapon specialization
             player1 = new Player(content.Load<Model>("Models/cortex_model"), 0.1f, 100, new Vector3(5, 0, 3.5f), 0.2f, camera, PlayerIndex.One);
             player1.setKeys(Keys.W, Keys.D, Keys.S, Keys.A, Keys.Space, PlayerIndex.One);
+            Weapon player1Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"));
+            player1.PlayerWeapon = player1Weapon;
 
-            player2 = new Player(content.Load<Model>("Models/Cylinder"), 0.1f, 100, new Vector3(-5, 0, 0), 3, camera, PlayerIndex.Two);
+            player2 = new Player(content.Load<Model>("Models/npcModel"), 0.1f, 100, new Vector3(-5, 4f, 0), 0.6f, camera, PlayerIndex.Two);
             player2.setKeys(Keys.Up, Keys.Right, Keys.Down, Keys.Left, Keys.NumPad0, PlayerIndex.Two);
+            Weapon player2Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"));
+            player2.PlayerWeapon = player2Weapon;
+
+            tempObstacle = new GameObject(content.Load<Model>("Models/Cylinder"), 0, 100, new Vector3(0, 4f, 15), 0.5f, camera);
 
             // reset game time after loading all assets
             ScreenManager.Game.ResetElapsedTime();
@@ -89,6 +98,19 @@ namespace Gameception
             {
                 player1.Update();
                 player2.Update();
+
+                tempObstacle.Update();
+                
+                // THIS CODE SHOULD BE MOVED
+                // This is not working correctly yet
+                foreach (Projectile p in player2.PlayerWeapon.AllProjectiles)
+                {
+                    if (p.getBoundingShpere().Intersects(tempObstacle.getBoundingShpere()))
+                    {
+                        p.Active = false;
+                        tempObstacle.Position = player2.Position;
+                    }
+                }
                 
                 camera.Update(player1, player2);
             }
@@ -137,9 +159,17 @@ namespace Gameception
         {
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
 
+            // Ensures that models are drawn at correct depth
+            DepthStencilState depth = new DepthStencilState();
+            depth.DepthBufferEnable = true;
+
+            ScreenManager.GraphicsDevice.DepthStencilState = depth;
+
             ground.Draw();
             player1.Draw();
             player2.Draw();
+
+            tempObstacle.Draw();
 
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;

@@ -31,6 +31,9 @@ namespace Gameception
         // A reference to the camera. Needed for rendering
         private Camera gameCamera;
 
+        // Determines whether or not this object is active
+        private bool active;
+
         #region Properties
 
         public Model ObjectModel
@@ -75,6 +78,12 @@ namespace Gameception
             set { gameCamera = value; }
         }
 
+        public bool Active
+        {
+            get { return active; }
+            set { active = value; }
+        }
+
         #endregion
 
         public GameObject(Model model, float moveSpeed, int initialHealth, Vector3 startPosition, float scale, Camera camera)
@@ -85,6 +94,28 @@ namespace Gameception
             Position = startPosition;
             ScaleFactor = scale;
             GameCamera = camera;
+
+            Active = true; // Active by default
+        }
+
+        // Create and return a bounding sphere for this game object
+        public BoundingSphere getBoundingShpere()
+        {
+            BoundingSphere objectBoundingShere = new BoundingSphere();
+
+            foreach (ModelMesh mesh in ObjectModel.Meshes)
+            {
+                if (objectBoundingShere.Radius == 0) // If this is the first mesh
+                {
+                    objectBoundingShere = mesh.BoundingSphere;
+                }
+                else
+                {
+                    objectBoundingShere = BoundingSphere.CreateMerged(objectBoundingShere, mesh.BoundingSphere);
+                }
+            }
+
+            return objectBoundingShere;
         }
 
         public virtual void Update()
@@ -95,18 +126,25 @@ namespace Gameception
         // Draw the model to the screen
         public virtual void Draw()
         {
-            foreach (ModelMesh mesh in ObjectModel.Meshes)
+            Matrix [] transforms = new Matrix[ObjectModel.Bones.Count];
+            ObjectModel.CopyBoneTransformsTo(transforms);
+
+            // Only draw a gameObject if it's active
+            if (Active)
             {
-                foreach (BasicEffect effect in mesh.Effects)
+                foreach (ModelMesh mesh in ObjectModel.Meshes)
                 {
-                    effect.EnableDefaultLighting();
+                    foreach (BasicEffect effect in mesh.Effects)
+                    {
+                        effect.EnableDefaultLighting();
 
-                    effect.View = GameCamera.View;
-                    effect.Projection = GameCamera.Projection;
-                    effect.World = Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
+                        effect.View = GameCamera.View;
+                        effect.Projection = GameCamera.Projection;
+                        effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
+                    }
+
+                    mesh.Draw();
                 }
-
-                mesh.Draw();
             }
         }
     }
