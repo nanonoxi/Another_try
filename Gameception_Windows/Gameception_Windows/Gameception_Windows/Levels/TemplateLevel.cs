@@ -66,7 +66,7 @@ namespace Gameception
             Weapon player2Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"));
             player2.PlayerWeapon = player2Weapon;
 
-            tempObstacle = new PushPullObject(content.Load<Model>("Models/Cylinder"), 0, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
+            tempObstacle = new PushPullObject(content.Load<Model>("Models/Cylinder"), 0.4f, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
 
             // reset game time after loading all assets
             ScreenManager.Game.ResetElapsedTime();
@@ -116,7 +116,8 @@ namespace Gameception
                 if (p.getBoundingShpere().Intersects(tempObstacle.getBoundingShpere()))
                 {
                     p.Active = false;
-                    tempObstacle.Position = player2.Position;
+                    //tempObstacle.Position = player2.Position;
+                    tempObstacle.pull(player2.Position, player2);
                 }
             }
         }

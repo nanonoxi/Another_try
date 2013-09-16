@@ -18,6 +18,8 @@ namespace Gameception
         // The direction in which the object should move
         Vector3 direction;
 
+        Player player2;
+
         // Determines whether this object has been pulled by NPCs
         bool beingPulled;
 
@@ -50,12 +52,13 @@ namespace Gameception
         }
 
         // Sets all appropriate variables when the object is being pulled by NPC
-        public void pull(Vector3 npcPosition)
+        public void pull(Vector3 npcPosition, Player p2)
         {
             BeingPulled = true;
             Target = npcPosition;
 
             direction = Vector3.Normalize(Target - Position);
+            player2 = p2;
         }
 
         // Updates this gameObject
@@ -63,9 +66,13 @@ namespace Gameception
         {
             if (BeingPulled)
             {
-                if (Position != Target)
+                if (!(this.getBoundingShpere().Intersects(player2.getBoundingShpere())))
                 {
                     Position += (direction * MovementSpeed);
+                }
+                else
+                {
+                    BeingPulled = false;
                 }
             }
             base.Update();
