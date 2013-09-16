@@ -280,6 +280,18 @@
     </Compile>
     <Compile Include="Models\tree.jpg">
       <Name>tree</Name>
+	</Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MenuTitles\anykeytocontinue.png">
+      <Name>anykeytocontinue</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MenuTitles\pressStart.png">
+      <Name>pressStart</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -289,6 +301,13 @@
       <Name>crash_level</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
+	</Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MenuTitles\endgamemenu.png">
+      <Name>endgamemenu</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>

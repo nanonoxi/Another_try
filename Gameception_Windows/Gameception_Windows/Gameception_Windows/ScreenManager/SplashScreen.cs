@@ -67,6 +67,7 @@ namespace Gameception
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+
             screenManager.SoundManager.play("title");
 
             fadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
