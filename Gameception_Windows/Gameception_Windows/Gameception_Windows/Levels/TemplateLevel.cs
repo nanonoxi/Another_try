@@ -51,7 +51,7 @@ namespace Gameception
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
             gameFont = content.Load<SpriteFont>("Fonts/gamefont");
-            ground = new GameObject(content.Load<Model>("Models/Ground"), 0, 0, Vector3.Zero, 0.001f, camera);
+            ground = new GameObject(content.Load<Model>("Models/crash_level"), 0, 0, Vector3.Zero, 6f, camera);
             
             // player set up should move
             // also, perhaps two separate player objects for Player1 and NPC, inheriting from class Player,
