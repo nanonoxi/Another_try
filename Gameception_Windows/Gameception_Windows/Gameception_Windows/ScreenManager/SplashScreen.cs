@@ -12,10 +12,15 @@ namespace Gameception
     class SplashScreen : Screen
     {
         #region Attributes
-
+ 
+        ScreenManager screenManager;
         ContentManager content;
         Texture2D splashTexture;
-        ScreenManager screenManager;
+        Texture2D startTexture;
+        int textAlpha = 55;
+        int fadeIncrement = 5;
+        double fadeDelay = 0.35;
+
         #endregion
 
         #region Initialization
@@ -37,6 +42,13 @@ namespace Gameception
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
             splashTexture = content.Load<Texture2D>("Backgrounds/matrix_splash_0");
+
+
+#if WINDOWS
+            startTexture = content.Load<Texture2D>("MenuTitles/pressStart");
+#else
+            startTexture = content.Load<Texture2D>("MenuTitles/pressStart");
+#endif
         }
 
 
@@ -55,7 +67,20 @@ namespace Gameception
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-            screenManager.SoundManager.play("title");
+            //screenManager.SoundManager.play("title");
+
+            fadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (fadeDelay <= 0)
+            {
+                fadeDelay = .035; // reset
+                textAlpha += fadeIncrement;
+
+                if (textAlpha >= 180 || textAlpha <= 50) // switch between increment/decrement
+                {
+                    fadeIncrement *= -1;
+                }
+            }
         }
 
         /// <summary>
@@ -78,9 +103,6 @@ namespace Gameception
 
             if (keyboardState.GetPressedKeys().Length > 0) // if any key is pressed
             {
-                //screenManager.AddScreen(new BackgroundScreen(), null);
-                //screenManager.AddScreen(new MainMenuScreen(), null);
-
                 LoadingScreen.Load(ScreenManager, true, null, new BackgroundScreen(), new MainMenuScreen());
             }
         }
@@ -98,10 +120,16 @@ namespace Gameception
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Rectangle fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);
 
+            // text "pressy any key to continue / press start
+            Color colour = new Color (textAlpha, textAlpha, textAlpha);
+            colour *= TransitionAlpha;
+            Vector2 textOrigin = new Vector2((viewport.Width - startTexture.Width) / 2, viewport.Height - ( startTexture.Height * 2));
+
             spriteBatch.Begin();
 
             spriteBatch.Draw(splashTexture, fullscreen,
                              new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
+            spriteBatch.Draw(startTexture, textOrigin,colour);
 
             spriteBatch.End();
         }

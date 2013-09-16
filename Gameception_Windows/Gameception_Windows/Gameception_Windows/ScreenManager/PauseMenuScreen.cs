@@ -58,7 +58,7 @@ namespace Gameception
         void ConfirmQuitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
-                                                           new MainMenuScreen());
+                                                           new EndGameScreen());
         }
 
         #endregion

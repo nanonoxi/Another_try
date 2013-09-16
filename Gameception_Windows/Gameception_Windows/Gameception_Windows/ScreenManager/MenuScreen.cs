@@ -199,8 +199,6 @@ namespace Gameception
 
             GraphicsDevice graphics = ScreenManager.GraphicsDevice;
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-            //SpriteFont font = ScreenManager.Font;
-            SpriteFont titlefont = ScreenManager.Titlefont;
 
             spriteBatch.Begin();
 
@@ -226,7 +224,6 @@ namespace Gameception
 
             titlePosition.Y -= transitionOffset * 100;
 
-            //spriteBatch.DrawString(titlefont, menuTitle, titlePosition, titleColor, 0, titleOrigin, titleScale, SpriteEffects.None, 0);
             spriteBatch.Draw(menuTitleTexture, titlePosition, null, titleColor, 0.0f, titleOrigin, 1.0f, SpriteEffects.None, 0.0f);
 
             spriteBatch.End();

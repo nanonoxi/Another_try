@@ -1,0 +1,128 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
+
+namespace Gameception
+{
+    class EndGameScreen : Screen
+    {
+        #region Attributes
+
+        Texture2D titleTexture;
+        Texture2D backgroundTexture;
+
+        #endregion
+
+        #region Initialization
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public EndGameScreen()
+        {
+            TransitionOnTime = TimeSpan.FromSeconds(0.5);
+            TransitionOffTime = TimeSpan.FromSeconds(0.5); 
+/*            // Create our menu entries.
+            MenuEntry mainMenuEntry = new MenuEntry("Main Menu");
+
+            // Hook up menu event handlers.
+            mainMenuEntry.Selected += QuitGameMenuEntrySelected;
+
+            // Add entries to the menu.
+            MenuEntries.Add(mainMenuEntry);
+ */       }
+
+        public override void LoadContent()
+        {
+            ContentManager content = ScreenManager.Game.Content;
+
+            titleTexture = content.Load<Texture2D>("MenuTitles/endgamemenu");
+            backgroundTexture = content.Load<Texture2D>("Backgrounds/tetris_heart");
+        }
+
+        #endregion
+
+        #region Handle Input
+
+        public override void HandleInput(InputState input)
+        {
+            if (input == null)
+                throw new ArgumentNullException("input");
+
+            int playerIndex;
+            if (ControllingPlayer.HasValue)
+                playerIndex = (int)ControllingPlayer.Value;
+            else
+                playerIndex = 1;
+
+            KeyboardState keyboardState = input.CurrentKeyboardStates[playerIndex];
+            GamePadState gamePadState = input.CurrentGamePadStates[playerIndex];
+
+            if (keyboardState.GetPressedKeys().Length > 0) // if any key is pressed
+            {
+                LoadingScreen.Load(ScreenManager, true, null, new BackgroundScreen(), new MainMenuScreen());
+            }
+        }
+
+        /// <summary>
+        /// Event handler for when the Quit Game menu entry is selected.
+        /// </summary>
+        void QuitGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            const string message = "Do you want to return to the main menu?";
+
+            MessageBoxScreen confirmQuitMessageBox = new MessageBoxScreen(message);
+
+            confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;
+
+            ScreenManager.AddScreen(confirmQuitMessageBox, ControllingPlayer);
+        }
+
+        /// <summary>
+        /// Event handler for when the user selects ok on the "are you sure
+        /// you want to quit" message box. This uses the loading screen to
+        /// transition from the game back to the main menu screen.
+        /// </summary>
+        void ConfirmQuitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
+        {
+            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                                                           new MainMenuScreen());
+        }
+
+        #endregion
+        #region Draw
+
+        /// <summary>
+        /// Draws the menu.
+        /// </summary>
+        public override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice graphics = ScreenManager.GraphicsDevice;
+            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+
+            spriteBatch.Begin();
+
+            // Make the menu slide into place during transitions, using a
+            // power curve to make things look more interesting (this makes
+            // the movement slow down as it nears the end).
+            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+
+            // Draw the menu title centered on the screen
+            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 140);
+            Vector2 titleOrigin = new Vector2(titleTexture.Width / 2, titleTexture.Height / 2);
+            Color titleColor = Color.White * TransitionAlpha;
+
+            titlePosition.Y -= transitionOffset * 100;
+
+            spriteBatch.Draw(titleTexture, titlePosition, null, titleColor, 0.0f, titleOrigin, 1.0f, SpriteEffects.None, 0.0f);
+
+            spriteBatch.End();
+        }
+        #endregion
+    }
+}
