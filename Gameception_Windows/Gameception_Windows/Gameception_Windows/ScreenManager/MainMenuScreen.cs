@@ -45,7 +45,8 @@ namespace Gameception
         /// </summary>
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new TemplateLevel());
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new CrawlScreen());
+            //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new TemplateLevel());
             //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen());
         }
 
