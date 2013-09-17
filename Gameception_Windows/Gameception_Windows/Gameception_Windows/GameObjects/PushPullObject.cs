@@ -20,8 +20,11 @@ namespace Gameception
 
         Player player2;
 
-        // Determines whether this object has been pulled by NPCs
+        // Determines whether this object has been pulled by NPC
         bool beingPulled;
+
+        // Determines whether this object is being held by NPC
+        bool beingHeld;
 
         public int DamageDone
         {
@@ -39,6 +42,12 @@ namespace Gameception
         {
             get { return beingPulled; }
             set { beingPulled = value;}
+        }
+
+        public bool BeingHeld
+        {
+            get { return beingHeld; }
+            set { beingHeld = value; }
         }
 
         #endregion
@@ -64,6 +73,7 @@ namespace Gameception
         // Updates this gameObject
         public override void Update()
         {
+            // Second parameter indicates that player2 is trying to pull something
             if (BeingPulled)
             {
                 if (!(this.getBoundingShpere().Intersects(player2.getBoundingShpere())))
@@ -72,8 +82,24 @@ namespace Gameception
                 }
                 else
                 {
+                    player2.CanMove = true;
+                    player2.ObjectHeld = true;
                     BeingPulled = false;
+                    BeingHeld = true;
                 }
+            }
+            else if (BeingHeld && player2.ObjectHeld)
+            {
+                if (!(this.getBoundingShpere().Intersects(player2.getBoundingShpere())))
+                {
+                    direction = Vector3.Normalize(player2.Position - Position);
+                    Position += (direction * MovementSpeed);
+                }
+            }
+            else
+            {
+                BeingHeld = false;
+                BeingPulled = false;
             }
             base.Update();
         }

@@ -21,8 +21,18 @@ namespace Gameception
         // The weapon used by this player
         Weapon playerWeapon;
 
+        // Object held, only used by player 2
+        bool objectHeld;
+
         // Indicates whether the players are allowed to move, this is based on the distance between them
         private bool canMove;
+
+        public bool ObjectHeld
+        {
+            get { return objectHeld; }
+            set { objectHeld = value; }
+        }
+
         public bool CanMove
         {
             get { return canMove; }
@@ -70,6 +80,8 @@ namespace Gameception
             playerIndex = i;
 
             PlayerWeapon = null;
+            CanMove = true;
+            ObjectHeld = false;
         }
 
         #endregion
@@ -91,34 +103,51 @@ namespace Gameception
             KeyboardState keyboard = Keyboard.GetState();
             GamePadState gamepad = GamePad.GetState(playerIndex);
 
-            if (Position != PreviousPosition)
+            if (CanMove == true)
             {
-                PlayerFacing = Position - PreviousPosition;
+                if (Position != PreviousPosition)
+                {
+                    PlayerFacing = Position - PreviousPosition;
+                }
+
+                PreviousPosition = Position;
+
+                if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
+                {
+                    Position = Position + Vector3.UnitZ * MovementSpeed;
+                }
+                if (keyboard.IsKeyDown(Down) || (gamepad.ThumbSticks.Left.Y < 0))
+                {
+                    Position = Position + Vector3.UnitZ * (-MovementSpeed);
+                }
+
+                if (keyboard.IsKeyDown(Right) || (gamepad.ThumbSticks.Left.X > 0))
+                {
+                    Position = Position + Vector3.UnitX * (-MovementSpeed);
+                }
+                if (keyboard.IsKeyDown(Left) || (gamepad.ThumbSticks.Left.X < 0))
+                {
+                    Position = Position + Vector3.UnitX * MovementSpeed;
+                }
             }
 
-            PreviousPosition = Position;
-
-            if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
-            {
-                Position = Position + Vector3.UnitZ * MovementSpeed;
-            }
-            if (keyboard.IsKeyDown(Down) || (gamepad.ThumbSticks.Left.Y < 0))
-            {
-                Position = Position + Vector3.UnitZ * (-MovementSpeed);
-            }
-
-            if (keyboard.IsKeyDown(Right) || (gamepad.ThumbSticks.Left.X > 0))
-            {
-                Position = Position + Vector3.UnitX * (-MovementSpeed);
-            }
-            if (keyboard.IsKeyDown(Left) || (gamepad.ThumbSticks.Left.X < 0))
-            {
-                Position = Position + Vector3.UnitX * MovementSpeed;
-            }
-
+            // This needs to be outside the if so that the release of the button can be detected
             if (keyboard.IsKeyDown(Fire) || (gamepad.Triggers.Right > 0))
             {
-                PlayerWeapon.fire(GameCamera, Position, PlayerFacing);
+                if (playerIndex == PlayerIndex.One)
+                {
+                    PlayerWeapon.fire(GameCamera, Position, PlayerFacing);
+                }
+                else if (playerIndex == PlayerIndex.Two && ObjectHeld == false) // Player 2 can't move while pulling an object
+                {
+                    PlayerWeapon.fire(GameCamera, Position, PlayerFacing);
+                    CanMove = false;
+                }
+            }
+            else
+            {
+                ObjectHeld = false;
+                CanMove = true;
             }
         }
 
