@@ -18,6 +18,9 @@ namespace Gameception
         // The direction the player is facing, used for firing weapons
         Vector3 playerFacing;
 
+        // The rotation of the model
+        float rotationAngle;
+
         // The weapon used by this player
         Weapon playerWeapon;
 
@@ -79,6 +82,8 @@ namespace Gameception
             Fire = f;
             playerIndex = i;
 
+            rotationAngle = 0f;
+
             PlayerWeapon = null;
             CanMove = true;
             ObjectHeld = false;
@@ -115,19 +120,23 @@ namespace Gameception
                 if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
                 {
                     Position = Position + Vector3.UnitZ * MovementSpeed;
+                    rotationAngle = 0f;
                 }
-                if (keyboard.IsKeyDown(Down) || (gamepad.ThumbSticks.Left.Y < 0))
+                else if (keyboard.IsKeyDown(Down) || (gamepad.ThumbSticks.Left.Y < 0))
                 {
                     Position = Position + Vector3.UnitZ * (-MovementSpeed);
+                    rotationAngle = 180f;
                 }
 
                 if (keyboard.IsKeyDown(Right) || (gamepad.ThumbSticks.Left.X > 0))
                 {
                     Position = Position + Vector3.UnitX * (-MovementSpeed);
+                    rotationAngle = 270f;
                 }
-                if (keyboard.IsKeyDown(Left) || (gamepad.ThumbSticks.Left.X < 0))
+                else if (keyboard.IsKeyDown(Left) || (gamepad.ThumbSticks.Left.X < 0))
                 {
                     Position = Position + Vector3.UnitX * MovementSpeed;
+                    rotationAngle = 90f;
                 }
             }
 
@@ -161,7 +170,31 @@ namespace Gameception
             {
                 PlayerWeapon.Draw();
             }
-            base.Draw();
+
+            Matrix[] transforms = new Matrix[ObjectModel.Bones.Count];
+            ObjectModel.CopyAbsoluteBoneTransformsTo(transforms);
+
+            Matrix rotation = Matrix.CreateRotationY(MathHelper.ToRadians(rotationAngle));
+
+            // Only draw a gameObject if it's active
+            if (Active)
+            {
+                foreach (ModelMesh mesh in ObjectModel.Meshes)
+                {
+                    foreach (BasicEffect effect in mesh.Effects)
+                    {
+                        effect.EnableDefaultLighting();
+
+                        effect.View = GameCamera.View;
+                        effect.Projection = GameCamera.Projection;
+                        effect.World = rotation * transforms[mesh.ParentBone.Index] * Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
+                    }
+
+                    mesh.Draw();
+                }
+            }
+
+            //base.Draw();
         }
 
         #endregion
