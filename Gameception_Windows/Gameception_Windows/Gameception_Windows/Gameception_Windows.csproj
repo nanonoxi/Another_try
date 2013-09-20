@@ -119,7 +119,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ScreenManager\BackgroundScreen.cs" />
-    <Compile Include="ScreenManager\CrawlScreen.cs" />
     <Compile Include="ScreenManager\EndGameScreen.cs" />
     <Compile Include="ScreenManager\GameOverScreen.cs" />
     <Compile Include="ScreenManager\GameplayScreen.cs" />
