@@ -207,9 +207,6 @@ namespace Gameception
 
         #endregion
 
-        public void HandleInput(SoundManager soundManager)
-        {
-            
-        }
+ 
     }
 }
