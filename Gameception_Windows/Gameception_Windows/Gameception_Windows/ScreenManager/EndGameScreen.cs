@@ -15,6 +15,8 @@ namespace Gameception
 
         Texture2D titleTexture;
         Texture2D backgroundTexture;
+        String thisScreensMusic;
+        SoundManager soundManager;
 
         #endregion
 
@@ -25,8 +27,14 @@ namespace Gameception
         /// </summary>
         public EndGameScreen()
         {
+            thisScreensMusic = "sos";
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5); 
+        }
+
+        public void setSoundManager(SoundManager s)
+        {
+            this.soundManager = s;
         }
 
         public override void LoadContent()
@@ -78,6 +86,14 @@ namespace Gameception
         }
 
         #endregion
+        
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus,
+                                              bool coveredByOtherScreen)
+        {
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+            ScreenManager.SoundManager.play(thisScreensMusic);
+        }
+        
 
         #region Draw
 

@@ -186,6 +186,10 @@ namespace Gameception
         {
             this.otherScreenHasFocus = otherScreenHasFocus;
 
+            if (this is EndGameScreen && this.soundManager!=null)
+                this.soundManager.play("end");
+
+
             if (isExiting)
             {
                 // If the screen is going away to die, it should transition off.
@@ -277,5 +281,7 @@ namespace Gameception
         #endregion
 
 
+
+        
     }
 }

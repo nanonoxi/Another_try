@@ -11,6 +11,7 @@ namespace Gameception
 
         // Used to determine which player this object represents
         private PlayerIndex playerIndex;
+        SoundManager soundManager;
 
         // player control keys
         Keys Up, Right, Down, Left, Fire;
@@ -103,6 +104,11 @@ namespace Gameception
             base.Update();
         }
 
+        public void setSoundManager(SoundManager s)
+        {
+            this.soundManager = s;
+        }
+
         public void HandleInput()
         {
             KeyboardState keyboard = Keyboard.GetState();
@@ -146,10 +152,12 @@ namespace Gameception
                 if (playerIndex == PlayerIndex.One)
                 {
                     PlayerWeapon.fire(GameCamera, Position, PlayerFacing);
+                    soundManager.play("pew");
                 }
                 else if (playerIndex == PlayerIndex.Two && ObjectHeld == false) // Player 2 can't move while pulling an object
                 {
                     PlayerWeapon.fire(GameCamera, Position, PlayerFacing);
+                    soundManager.play("pew");
                     CanMove = false;
                 }
             }
@@ -198,5 +206,10 @@ namespace Gameception
         }
 
         #endregion
+
+        public void HandleInput(SoundManager soundManager)
+        {
+            
+        }
     }
 }

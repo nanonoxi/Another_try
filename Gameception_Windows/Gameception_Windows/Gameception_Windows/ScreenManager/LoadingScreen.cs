@@ -81,6 +81,7 @@ namespace Gameception
                                                        bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+            
 
             // If all the previous screens have finished transitioning
             // off, it is time to actually perform the load.

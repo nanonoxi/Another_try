@@ -26,6 +26,10 @@ namespace Gameception
         Player player1;
         Player player2;
 
+        Creep baddie;
+        List<Creep> minions;
+
+
         GameObject ground;
 
         float pauseAlpha;
@@ -45,6 +49,7 @@ namespace Gameception
 
         public override void LoadContent()
         {
+            minions = new List<Creep>();
             camera = new Camera(this.ScreenManager.Game.Graphics);
 
             if (content == null)
@@ -66,6 +71,20 @@ namespace Gameception
             Weapon player2Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"));
             player2.PlayerWeapon = player2Weapon;
 
+            player1.setSoundManager(ScreenManager.SoundManager);
+            player2.setSoundManager(ScreenManager.SoundManager);
+
+
+            Random r = new Random();
+            for (int i = 0; i < 2; i++)
+            {
+                int randomX = r.Next(-60, 60);
+                int randomZ = r.Next(-60, 60);
+
+                baddie = new minion(content.Load<Model>("Models/dude"), 0.1f, 100, new Vector3(randomX, 0.8f, randomZ), 0.1f, camera);
+                minions.Add(baddie);
+            }
+
             tempObstacle = new PushPullObject(content.Load<Model>("Models/Cylinder"), 0.4f, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
 
             // reset game time after loading all assets
@@ -86,13 +105,17 @@ namespace Gameception
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
+            
             base.Update(gameTime, otherScreenHasFocus, false);
+
+            ScreenManager.SoundManager.play("title3");
 
             // gradually fade in/out if covered by pause screen
             if (coveredByOtherScreen)
                 pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
             else
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
+
 
             if (IsActive)
             {
@@ -102,6 +125,16 @@ namespace Gameception
                 tempObstacle.Update();
                 
                 camera.Update(player1, player2);
+            }
+
+
+            for (int i = 0; i < minions.Count;i++ )
+            {
+                Creep c = minions.ElementAt(i); 
+
+                c.beEvil(player1, player2);
+                if (((minion)c).isDeadCheck())
+                    minions.Remove(c);
             }
 
             checkCollisions();
@@ -120,6 +153,18 @@ namespace Gameception
                     tempObstacle.pull(player2.Position, player2);
                 }
             }
+
+            foreach (Projectile p in player1.PlayerWeapon.AllProjectiles)
+            {
+                foreach(Creep c in minions)
+                {
+                    if (p.getBoundingShpere().Intersects(c.getBoundingShpere()))
+                    {
+                        c.takeDamage(p);   
+                    }
+                }
+            }
+
         }
 
         /// <summary>
@@ -145,6 +190,7 @@ namespace Gameception
 
             if (input.IsPauseGame(ControllingPlayer) || gamePadDisconnected)
             {
+                ScreenManager.SoundManager.pause();
                 ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
             }
             else if (input.IsLoseGame(ControllingPlayer))
@@ -181,16 +227,8 @@ namespace Gameception
 
             tempObstacle.Draw();
 
-            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-            Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-            Vector2 textSize = gameFont.MeasureString("Hello World!");
-            Vector2 textPosition = (viewportSize - textSize) / 2;
-
-            spriteBatch.Begin();
-            spriteBatch.DrawString(gameFont, "Hello World!", textPosition, Color.White);
-            spriteBatch.End();
-
+            foreach (Creep c in minions)
+                c.Draw();
 
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0 || pauseAlpha > 0)

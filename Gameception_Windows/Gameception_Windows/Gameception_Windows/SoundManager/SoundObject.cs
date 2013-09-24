@@ -45,7 +45,13 @@ namespace Gameception
 
         public SoundEffect getSound()
         {
+
             return soundEffect;
+        }
+
+        public void stopTrack()
+        {
+            playTime = 0.0;
         }
 
         public void update()

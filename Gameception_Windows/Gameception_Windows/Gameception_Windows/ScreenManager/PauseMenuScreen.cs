@@ -16,7 +16,7 @@ namespace Gameception
         /// <summary>
         /// Constructor
         /// </summary>
-        public PauseMenuScreen() : base("pausemenu")
+        public PauseMenuScreen() : base("pausemenu", "pause")
         {
             // Create our menu entries.
             MenuEntry resumeGameMenuEntry = new MenuEntry("Resume Game");

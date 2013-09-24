@@ -110,7 +110,9 @@
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="CollisionManager\CollisionManager.cs" />
     <Compile Include="Gameception.cs" />
+    <Compile Include="GameObjects\Creep.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
+    <Compile Include="GameObjects\minion.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="GameObjects\Projectile.cs" />
     <Compile Include="GameObjects\PushPullObject.cs" />
