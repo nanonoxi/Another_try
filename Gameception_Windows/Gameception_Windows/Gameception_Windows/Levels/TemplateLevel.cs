@@ -28,8 +28,8 @@ namespace Gameception
 
         Creep baddie;
         List<Creep> minions;
-
-
+        ammoSupply ammo;
+        List<ammoSupply> ammoDrops;
         GameObject ground;
 
         float pauseAlpha;
@@ -50,6 +50,8 @@ namespace Gameception
         public override void LoadContent()
         {
             minions = new List<Creep>();
+            ammoDrops = new List<ammoSupply>();
+
             camera = new Camera(this.ScreenManager.Game.Graphics);
 
             if (content == null)
@@ -74,6 +76,7 @@ namespace Gameception
             player1.setSoundManager(ScreenManager.SoundManager);
             player2.setSoundManager(ScreenManager.SoundManager);
 
+            
 
             Random r = new Random();
             for (int i = 0; i < 2; i++)
@@ -128,13 +131,32 @@ namespace Gameception
             }
 
 
+            for (int i = 0; i < ammoDrops.Count; i++ )
+            {
+                if (ammoDrops.ElementAt(i).isPickedUp())
+                    ammoDrops.RemoveAt(i);
+            }
+
             for (int i = 0; i < minions.Count;i++ )
             {
                 Creep c = minions.ElementAt(i); 
 
                 c.beEvil(player1, player2);
+              
+                //remove dead creep
                 if (((minion)c).isDeadCheck())
+                {
+                    //check if it should drop ammo
+                    if (((minion)c)._dropAmmo())
+                    {
+                        ammo = new ammoSupply(content.Load<Model>("Models/SphereHighPoly"), 0, 0, 1, camera);
+                        ammo.setPosition(c);
+                        ammoDrops.Add(ammo);
+                    }
+
+
                     minions.Remove(c);
+                }
             }
 
             checkCollisions();
@@ -164,6 +186,17 @@ namespace Gameception
                     }
                 }
             }
+
+            foreach(ammoSupply a in ammoDrops)
+            {
+                if (a.getBoundingShpere().Intersects(player1.getBoundingShpere()))
+                {
+                  //  player1.ammoIncrease();
+                    a.pickedUp();
+                }
+            }
+
+
 
         }
 
@@ -229,6 +262,8 @@ namespace Gameception
 
             foreach (Creep c in minions)
                 c.Draw();
+            foreach (ammoSupply a in ammoDrops)
+                a.Draw();
 
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0 || pauseAlpha > 0)

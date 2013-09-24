@@ -12,7 +12,7 @@ namespace Gameception
 
         public Vector3 spawnPoint, patrolPoint;
 
-        bool onPatrol, movingToPointB,isDead;
+        bool onPatrol, movingToPointB,isDead, dropAmmo;
       
         /*no idea how to seed a random number generator*/
         private static int seed = unchecked(DateTime.Now.Ticks.GetHashCode());
@@ -43,7 +43,18 @@ namespace Gameception
             onPatrol = true;
             movingToPointB = true;
             isDead = false;
+            determineAmmoDrop();
         }
+
+        private void determineAmmoDrop()
+        {
+            dropAmmo = true;
+        }
+        public bool _dropAmmo()
+        {
+            return dropAmmo;
+        }
+
 
 
         //update method, patrol if players are out of range,

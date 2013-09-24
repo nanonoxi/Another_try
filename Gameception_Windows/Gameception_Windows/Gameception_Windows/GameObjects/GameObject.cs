@@ -98,6 +98,20 @@ namespace Gameception
             Active = true; // Active by default
         }
 
+
+        //positionless contructor
+        public GameObject(Model model, float moveSpeed, int initialHealth, float scale, Camera camera)
+        {
+            ObjectModel = model;
+            MovementSpeed = moveSpeed;
+            Health = initialHealth;
+            ScaleFactor = scale;
+            GameCamera = camera;
+
+            Active = true; // Active by default
+        }
+
+
         // Create and return a bounding sphere for this game object
         public BoundingSphere getBoundingShpere()
         {
