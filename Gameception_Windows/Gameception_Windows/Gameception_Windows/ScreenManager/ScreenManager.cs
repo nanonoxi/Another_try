@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Gameception
 {
@@ -143,8 +144,21 @@ namespace Gameception
             // Load extra sounds as needed per level in each level class by using
             // this.ScreenManager.SoundManager.add(content.Load<>(),"");
             soundManager = new SoundManager();
+            /******************************Songs---need to be mp3 files*********************************/
             soundManager.add(content.Load<Song>("Sounds/for_the_lost_lenore"), "title");
+            soundManager.add(content.Load<Song>("Sounds/09-instrumental"), "title2");
+            SoundManager.add(content.Load<Song>("Sounds/The_Crusade"), "title3");
+            SoundManager.add(content.Load<Song>("Sounds/16-$o$"), "sos");
+            SoundManager.add(content.Load<Song>("Sounds/more excuses"), "excuses");
 
+            /******************************SoundEffects---need to be wav files*********************************/
+            SoundManager.add(content.Load<SoundEffect>("Sounds/marioBrosbump"), "bump");
+            SoundManager.add(content.Load<SoundEffect>("Sounds/marioBrosPause"), "pause");
+            SoundManager.add(content.Load<SoundEffect>("Sounds/yoshi"), "end");
+            SoundManager.add(content.Load<SoundEffect>("Sounds/credits"), "gameOver");
+            SoundManager.add(content.Load<SoundEffect>("Sounds/pew"), "pew");
+
+            
             foreach (Screen screen in screens)
             {
                 screen.LoadContent();
@@ -281,9 +295,14 @@ namespace Gameception
         public void RemoveScreen(Screen screen)
         {
             if (isInitialized)
-            {
                 screen.UnloadContent();
-            }
+
+            //calling pause after removing pause screen
+            //results in music unpausing
+            if (screen is PauseMenuScreen)
+                soundManager.pause();
+            else
+                soundManager.stop();
 
             screens.Remove(screen);
             screensToUpdate.Remove(screen);

@@ -45,7 +45,11 @@ namespace Gameception
 
         public SoundEffect getSound()
         {
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> origin/master
             return soundEffect;
         }
 

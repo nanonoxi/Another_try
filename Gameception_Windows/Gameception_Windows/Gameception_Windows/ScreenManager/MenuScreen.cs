@@ -23,6 +23,9 @@ namespace Gameception
 
         int selectedEntry = 0;
 
+        String thisScreensMusic;
+        bool paused = false;
+
         string menuTitle;
         public string MenuTitle
         {
@@ -48,10 +51,19 @@ namespace Gameception
         public MenuScreen(string menuTitle)
         {
             this.menuTitle = menuTitle;
-
+            thisScreensMusic = "title2";
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5); 
         }
+
+        public MenuScreen(string menuTitle, String track)
+        {
+            this.menuTitle = menuTitle;
+            thisScreensMusic = track;
+            TransitionOnTime = TimeSpan.FromSeconds(0.5);
+            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+        }
+
 
         public override void LoadContent()
         {
@@ -73,6 +85,8 @@ namespace Gameception
             // Move to the previous menu entry?
             if (input.IsMenuUp(ControllingPlayer))
             {
+                ScreenManager.SoundManager.play("bump");
+
                 selectedEntry--;
 
                 if (selectedEntry < 0)
@@ -82,6 +96,8 @@ namespace Gameception
             // Move to the next menu entry?
             if (input.IsMenuDown(ControllingPlayer))
             {
+                ScreenManager.SoundManager.play("bump");
+
                 selectedEntry++;
 
                 if (selectedEntry >= menuEntries.Count)
@@ -110,6 +126,7 @@ namespace Gameception
         /// </summary>
         protected virtual void OnSelectEntry(int entryIndex, PlayerIndex playerIndex)
         {
+
             menuEntries[entryIndex].OnSelectEntry(playerIndex);
         }
 
@@ -175,6 +192,21 @@ namespace Gameception
                                                        bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+
+            if (thisScreensMusic.Equals("pause"))
+            {
+                if (paused == false)
+                {
+                    ScreenManager.SoundManager.play(thisScreensMusic);
+                    ScreenManager.SoundManager.pause();                   
+                    paused = true;
+                }
+            }
+            else
+            {
+                ScreenManager.SoundManager.play(thisScreensMusic);
+                paused = false;
+            }
 
             // Update each nested MenuEntry object.
             for (int i = 0; i < menuEntries.Count; i++)

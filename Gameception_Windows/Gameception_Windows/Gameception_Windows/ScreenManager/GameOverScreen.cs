@@ -18,6 +18,9 @@ namespace Gameception
         int textAlpha = 55;
         int fadeIncrement = 5;
         double fadeDelay = 0.35;
+        String thisScreensMusic;
+        SoundManager soundManager;
+
 
         #endregion
 
@@ -28,8 +31,14 @@ namespace Gameception
         /// </summary>
         public GameOverScreen()
         {
+            thisScreensMusic = "excuses";
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+        }
+
+        public void setSoundManager(SoundManager s)
+        {
+            this.soundManager = s;
         }
 
         public override void LoadContent()
@@ -52,7 +61,7 @@ namespace Gameception
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-            //screenManager.SoundManager.play("title");
+            ScreenManager.SoundManager.play(thisScreensMusic);
 
             fadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -84,6 +93,7 @@ namespace Gameception
         }
 
         #endregion
+
 
         #region Draw
 

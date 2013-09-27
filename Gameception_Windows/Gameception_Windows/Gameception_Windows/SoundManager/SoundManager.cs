@@ -19,7 +19,11 @@ namespace Gameception
         private float volumeLevel;
 
         public SoundManager()
+<<<<<<< HEAD
         { 
+=======
+        {
+>>>>>>> origin/master
             sounds = new List<SoundObject>();
             volumeLevel = .5f;
 
@@ -71,8 +75,6 @@ namespace Gameception
                         so.getSound().Play();
         
                     }
-
-
                     break;
                 }
 
