@@ -16,9 +16,16 @@ namespace Gameception
         int debouncer = 0, pauseDebouncer = 0;
         bool playing = false;
 
-        public SoundManager()
-        { sounds = new List<SoundObject>(); }
+        private float volumeLevel;
 
+        public SoundManager()
+        { 
+            sounds = new List<SoundObject>();
+            volumeLevel = .5f;
+
+            MediaPlayer.Volume = volumeLevel;
+            SoundEffect.MasterVolume = volumeLevel;
+        }
 
         /* 2 add methods catering for both songs(mp3 files)
          * and soundEffect files(wav files)
@@ -62,6 +69,7 @@ namespace Gameception
                             debouncer = 60;
 
                         so.getSound().Play();
+        
                     }
 
 
@@ -69,6 +77,43 @@ namespace Gameception
                 }
 
             }
+        }
+
+        public void increaseMasterVolume()
+        {
+            if (MediaPlayer.Volume < 1)
+                MediaPlayer.Volume += 0.1f;
+            if (SoundEffect.MasterVolume < 1)
+                SoundEffect.MasterVolume += 0.1f;
+        }
+        public void decreaseMasterVolume()
+        {
+            if (MediaPlayer.Volume > 0)
+                MediaPlayer.Volume -= 0.1f;
+            if (SoundEffect.MasterVolume > 0)
+                SoundEffect.MasterVolume -= 0.1f;
+        }
+
+        public void increaseSFXVoume()
+        {
+            if (SoundEffect.MasterVolume < 1)
+                SoundEffect.MasterVolume += 0.1f;
+        }
+        public void decreseSFXVolume()
+        {
+            if (SoundEffect.MasterVolume > 0)
+                SoundEffect.MasterVolume -= 0.1f;
+        }
+
+        public void increaseBGM()
+        {
+            if (MediaPlayer.Volume < 1)
+                MediaPlayer.Volume += 0.1f;
+        }
+        public void decreaseBGM()
+        {
+            if (MediaPlayer.Volume > 0)
+                MediaPlayer.Volume -= 0.1f;
         }
 
         public void pause()
@@ -84,6 +129,12 @@ namespace Gameception
                 else
                     MediaPlayer.Resume();
             }
+        }
+
+        public void stop()
+        {
+            foreach (SoundObject s in sounds)
+                s.stopTrack();
         }
 
         public void Update()
