@@ -45,7 +45,6 @@ namespace Gameception
 
         public SoundEffect getSound()
         {
-
             return soundEffect;
         }
 

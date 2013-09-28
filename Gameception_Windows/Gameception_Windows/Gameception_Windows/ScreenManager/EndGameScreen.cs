@@ -30,7 +30,7 @@ namespace Gameception
             thisScreensMusic = "sos";
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5); 
-        }
+		}
 
         public void setSoundManager(SoundManager s)
         {
@@ -85,6 +85,20 @@ namespace Gameception
                                                            new MainMenuScreen());
         }
 
+        /// <summary>
+        /// Event handler for when the Quit Game menu entry is selected.
+        /// </summary>
+        void QuitGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            const string message = "Do you want to return to the main menu?";
+
+            MessageBoxScreen confirmQuitMessageBox = new MessageBoxScreen(message);
+
+            confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;
+
+            ScreenManager.AddScreen(confirmQuitMessageBox, ControllingPlayer);
+        }
+
         #endregion
         
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
@@ -95,6 +109,7 @@ namespace Gameception
         }
         
 
+		
         #region Draw
 
         /// <summary>
