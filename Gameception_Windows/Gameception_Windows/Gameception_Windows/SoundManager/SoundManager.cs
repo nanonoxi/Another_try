@@ -69,6 +69,7 @@ namespace Gameception
                             debouncer = 60;
 
                         so.getSound().Play();
+        
                     }
                     break;
                 }
