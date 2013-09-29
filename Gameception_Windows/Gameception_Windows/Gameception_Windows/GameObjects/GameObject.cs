@@ -113,7 +113,7 @@ namespace Gameception
 
 
         // Create and return a bounding sphere for this game object
-        public BoundingSphere getBoundingShpere()
+        public BoundingSphere getBoundingSphere()
         {
             BoundingSphere objectBoundingShere = new BoundingSphere();
 
