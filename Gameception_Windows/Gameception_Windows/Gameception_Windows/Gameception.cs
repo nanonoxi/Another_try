@@ -37,7 +37,7 @@ namespace Gameception
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferMultiSampling = true;
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
 
             screenManager = new ScreenManager(this);
             Components.Add(screenManager);

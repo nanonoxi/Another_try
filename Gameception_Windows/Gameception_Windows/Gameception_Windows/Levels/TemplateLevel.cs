@@ -187,17 +187,14 @@ namespace Gameception
                 }
             }
 
-            foreach(ammoSupply a in ammoDrops)
+            foreach (ammoSupply a in ammoDrops)
             {
                 if (a.getBoundingShpere().Intersects(player1.getBoundingShpere()))
                 {
-                  //  player1.ammoIncrease();
+                    //  player1.ammoIncrease();
                     a.pickedUp();
                 }
             }
-
-
-
         }
 
         /// <summary>

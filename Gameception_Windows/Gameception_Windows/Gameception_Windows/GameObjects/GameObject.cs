@@ -164,5 +164,14 @@ namespace Gameception
                 }
             }
         }
+
+        #region Public Methods
+
+        public void revertPosition()
+        {
+            this.Position = this.PreviousPosition;
+        }
+
+        #endregion
     }
 }
