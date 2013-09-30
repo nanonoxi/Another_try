@@ -21,6 +21,7 @@ namespace Gameception
 
         ContentManager content;
         SpriteFont gameFont;
+        CollisionManager collisionManager;
 
         Camera camera;
         Player player1;
@@ -90,6 +91,12 @@ namespace Gameception
 
             tempObstacle = new PushPullObject(content.Load<Model>("Models/Cylinder"), 0.4f, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
 
+            // add objects to collisionManager
+            collisionManager = new CollisionManager(this, 100, 100, 50);
+
+            collisionManager.Add(player1);
+            collisionManager.Add(player2);
+
             // reset game time after loading all assets
             ScreenManager.Game.ResetElapsedTime();
         }
@@ -128,6 +135,10 @@ namespace Gameception
                 tempObstacle.Update();
                 
                 camera.Update(player1, player2);
+
+                collisionManager.Update(player1);
+                collisionManager.Update(player2);
+
             }
 
 
@@ -261,6 +272,12 @@ namespace Gameception
             foreach (ammoSupply a in ammoDrops)
                 a.Draw();
 
+            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+            spriteBatch.Begin();
+
+            spriteBatch.DrawString(gameFont, ""+collision, Vector2.Zero, Color.White);
+            spriteBatch.End();
+
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0 || pauseAlpha > 0)
             {
@@ -269,6 +286,14 @@ namespace Gameception
                 ScreenManager.FadeBackBufferToBlack(alpha);
             }
         }
+
+        bool collision = false;
+
+        public void displayCollisions(bool value)
+        {
+            collision = value;
+        }
+
 
         #endregion
     }

@@ -11,10 +11,10 @@ namespace Gameception
         #region Attributes
 
         /// <summary>
-        /// Game CollisionManager belongs to
+        /// Game instance CollisionManager belongs to
         /// </summary>
-        Gameception game;
-        public Gameception Game
+        TemplateLevel game;
+        public TemplateLevel Game
         {
             get { return game; }
             set { game = value; }
@@ -84,11 +84,11 @@ namespace Gameception
         /// <summary>
         /// Create a CollisionManager
         /// </summary>
-        /// <param name="game_"></param> Game this collision manager belongs to
+        /// <param name="game_"></param> Game instance this collision manager belongs to
         /// <param name="x_"></param> Total number of X-coords in the grid
         /// <param name="y_"></param> Total number of Y-coords in the grid
         /// <param name="w_"></param> Width of a cell in pixels
-        public CollisionManager(Gameception game_, int x_, int y_, int w_)
+        public CollisionManager(TemplateLevel game_, int x_, int y_, int w_)
         {
             Game = game_;
             X = x_;
@@ -206,6 +206,7 @@ namespace Gameception
 
         public void CheckCollisions(GameObject o)
         {
+            Game.displayCollisions(false); // reset
             // get object bounds
             BoundingSphere sphere = o.getBoundingSphere();
             Vector3 center = o.Position;
@@ -266,7 +267,7 @@ namespace Gameception
 
         private void processCollision(GameObject o1, GameObject o2)
         {
-
+            Game.displayCollisions(true);
             /*if (o1.GetType().Name.Equals(""))
             {
             }
