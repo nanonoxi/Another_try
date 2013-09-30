@@ -11,6 +11,8 @@ namespace Gameception
 
         // Used to determine which player this object represents
         private PlayerIndex playerIndex;
+
+        // Handles the sound for this player
         SoundManager soundManager;
 
         // player control keys
@@ -30,6 +32,13 @@ namespace Gameception
 
         // Indicates whether the players are allowed to move, this is based on the distance between them
         private bool canMove;
+
+        // The ammount of ammunition the player has
+        private int ammo;
+
+        #endregion
+
+        #region Properties
 
         public bool ObjectHeld
         {
@@ -55,6 +64,12 @@ namespace Gameception
             set { playerWeapon = value; }
         }
 
+
+        public int Ammo
+        {
+            get { return ammo; }
+            set { ammo = value; }
+        }
         #endregion
 
         #region Initialization
@@ -63,6 +78,7 @@ namespace Gameception
             : base(model, moveSpeed, initialHealth, startPosition, scale, camera)
         {
             playerIndex = player;
+            ammo = 10;
         }
 
         /// <summary>
@@ -151,8 +167,14 @@ namespace Gameception
             {
                 if (playerIndex == PlayerIndex.One)
                 {
-                    PlayerWeapon.fire(GameCamera, Position, PlayerFacing);
-                    soundManager.play("pew");
+                    if (ammo > 0)
+                    {
+                        PlayerWeapon.fire(GameCamera, Position, PlayerFacing);
+                    }
+                    else
+                    {
+                       // Play sound here that indicates ammo is finished
+                    }
                 }
                 else if (playerIndex == PlayerIndex.Two && ObjectHeld == false) // Player 2 can't move while pulling an object
                 {
@@ -206,7 +228,5 @@ namespace Gameception
         }
 
         #endregion
-
- 
     }
 }

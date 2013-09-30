@@ -144,6 +144,7 @@ namespace Gameception
             // Load extra sounds as needed per level in each level class by using
             // this.ScreenManager.SoundManager.add(content.Load<>(),"");
             soundManager = new SoundManager();
+
             /******************************Songs---need to be mp3 files*********************************/
             soundManager.add(content.Load<Song>("Sounds/for_the_lost_lenore"), "title");
             soundManager.add(content.Load<Song>("Sounds/09-instrumental"), "title2");

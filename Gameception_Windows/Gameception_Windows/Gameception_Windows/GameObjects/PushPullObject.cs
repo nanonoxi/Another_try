@@ -92,7 +92,11 @@ namespace Gameception
             {
                 if (!(this.getBoundingShpere().Intersects(player2.getBoundingShpere())))
                 {
-                    direction = Vector3.Normalize(player2.Position - Position);
+                    Vector3 temp = player2.Position;
+                    temp.Y += player2.getBoundingShpere().Radius;
+
+                    //direction = Vector3.Normalize(player2.Position - Position);
+                    direction = Vector3.Normalize(temp - Position);
                     Position += (direction * MovementSpeed);
                 }
             }

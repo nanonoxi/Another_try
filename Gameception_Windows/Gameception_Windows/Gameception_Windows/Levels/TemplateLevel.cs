@@ -65,12 +65,12 @@ namespace Gameception
             // to allow for weapon specialization
             player1 = new Player(content.Load<Model>("Models/player1"), 0.1f, 100, new Vector3(5, 3.5f, 0), 3.5f, camera, PlayerIndex.One);
             player1.setKeys(Keys.W, Keys.D, Keys.S, Keys.A, Keys.Space, PlayerIndex.One);
-            Weapon player1Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"));
+            Weapon player1Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"), player1);
             player1.PlayerWeapon = player1Weapon;
 
             player2 = new Player(content.Load<Model>("Models/npcModel"), 0.1f, 100, new Vector3(-5, 4f, 0), 0.6f, camera, PlayerIndex.Two);
             player2.setKeys(Keys.Up, Keys.Right, Keys.Down, Keys.Left, Keys.NumPad0, PlayerIndex.Two);
-            Weapon player2Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"));
+            Weapon player2Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"), player2);
             player2.PlayerWeapon = player2Weapon;
 
             player1.setSoundManager(ScreenManager.SoundManager);
@@ -149,11 +149,10 @@ namespace Gameception
                     //check if it should drop ammo
                     if (((minion)c)._dropAmmo())
                     {
-                        ammo = new ammoSupply(content.Load<Model>("Models/SphereHighPoly"), 0, 0, 1, camera);
+                        ammo = new ammoSupply(content.Load<Model>("Models/SphereHighPoly"), 0, 0, 1, camera, 20);
                         ammo.setPosition(c);
                         ammoDrops.Add(ammo);
                     }
-
 
                     minions.Remove(c);
                 }
@@ -191,7 +190,7 @@ namespace Gameception
             {
                 if (a.getBoundingShpere().Intersects(player1.getBoundingShpere()))
                 {
-                    //  player1.ammoIncrease();
+                    player1.Ammo += a.AmmoAmount;
                     a.pickedUp();
                 }
             }
