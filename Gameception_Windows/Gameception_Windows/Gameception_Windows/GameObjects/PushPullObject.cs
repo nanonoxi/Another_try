@@ -93,7 +93,7 @@ namespace Gameception
                 if (!(this.getBoundingSphere().Intersects(player2.getBoundingSphere())))
                 {
                     Vector3 temp = player2.Position;
-                    temp.Y += player2.getBoundingShpere().Radius;
+                    temp.Y += player2.getBoundingSphere().Radius;
 
                     //direction = Vector3.Normalize(player2.Position - Position);
                     direction = Vector3.Normalize(temp - Position);
