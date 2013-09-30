@@ -151,6 +151,7 @@ namespace Gameception
             SoundManager.add(content.Load<Song>("Sounds/The_Crusade"), "title3");
             SoundManager.add(content.Load<Song>("Sounds/16-$o$"), "sos");
             SoundManager.add(content.Load<Song>("Sounds/more excuses"), "excuses");
+            SoundManager.add(content.Load<Song>("Sounds/FinalFantasy_Remix"), "final");
 
             /******************************SoundEffects---need to be wav files*********************************/
             SoundManager.add(content.Load<SoundEffect>("Sounds/marioBrosbump"), "bump");

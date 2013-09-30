@@ -273,7 +273,7 @@
     </Compile>
     <Compile Include="Models\tree.jpg">
       <Name>tree</Name>
-	</Compile>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MenuTitles\anykeytocontinue.png">
@@ -294,7 +294,7 @@
       <Name>crash_level</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
-	</Compile>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MenuTitles\endgamemenu.png">
@@ -402,6 +402,13 @@
   <ItemGroup>
     <Compile Include="Sounds\more excuses.mp3">
       <Name>more excuses</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sounds\FinalFantasy_Remix.mp3">
+      <Name>FinalFantasy_Remix</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>

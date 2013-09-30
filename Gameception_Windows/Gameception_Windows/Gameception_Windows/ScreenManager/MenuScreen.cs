@@ -51,7 +51,7 @@ namespace Gameception
         public MenuScreen(string menuTitle)
         {
             this.menuTitle = menuTitle;
-            thisScreensMusic = "title2";
+            thisScreensMusic = "sos";
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5); 
         }

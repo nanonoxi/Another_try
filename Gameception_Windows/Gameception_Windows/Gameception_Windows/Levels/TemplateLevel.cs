@@ -111,7 +111,7 @@ namespace Gameception
             
             base.Update(gameTime, otherScreenHasFocus, false);
 
-            ScreenManager.SoundManager.play("title3");
+            ScreenManager.SoundManager.play("final");
 
             // gradually fade in/out if covered by pause screen
             if (coveredByOtherScreen)
