@@ -164,5 +164,21 @@ namespace Gameception
                 }
             }
         }
+
+        #region Public Methods
+
+        // Change the position of the game object to it's position in the previous cycle
+        public void revertPosition()
+        {
+            this.Position = this.PreviousPosition;
+        }
+
+        // Allows for the incrementing and decrementing of health
+        public void adjustHealth(int amount)
+        {
+            this.Health += amount;
+        }
+
+        #endregion
     }
 }

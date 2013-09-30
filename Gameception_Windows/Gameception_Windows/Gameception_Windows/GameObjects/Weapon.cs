@@ -7,6 +7,11 @@ namespace Gameception
 {
     class Weapon
     {
+        #region Attributes
+
+        // The gameObject to which this weapon belongs
+        GameObject owner;
+
         // Position of the weapon holder
         private Vector3 ownerPosition;
 
@@ -22,7 +27,15 @@ namespace Gameception
         // All the projectiles created by this weapon
         Collection<Projectile> allProjectiles;
 
+        #endregion
+
         #region Properties
+
+        public GameObject Owner
+        {
+            get { return owner; }
+            set { owner = value; }
+        }
 
         public Vector3 OwnerPosition
         {
@@ -50,10 +63,12 @@ namespace Gameception
 
         #endregion
 
-        public Weapon(float cooldown, Model modelOfProjectile)
+        public Weapon(float cooldown, Model modelOfProjectile, GameObject obj)
         {
             CooldownTime = cooldown;
             elapsedFrames = 0;
+
+            Owner = obj;
 
             ProjectileModel = modelOfProjectile;
             allProjectiles = new Collection<Projectile>();
@@ -67,6 +82,9 @@ namespace Gameception
                 // Create projectile
                 allProjectiles.Add(new Projectile(ProjectileModel, 1.5f, 0, 10f, startPosition, 0.1f, gameCamera, shotDirection));
 
+                // Play sound here
+
+                ((Player)Owner).Ammo--;
                 elapsedFrames = 0;
             }
         }

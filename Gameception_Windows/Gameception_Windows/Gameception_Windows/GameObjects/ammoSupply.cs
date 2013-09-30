@@ -12,9 +12,23 @@ namespace Gameception
         Vector3 position;
         bool used;
 
-        public ammoSupply(Model model, float moveSpeed, int initialHealth, float scale, Camera camera)
+        // Indicates the ammount of ammo given by this ammo pickup
+        int ammoAmount;
+
+        #region Properties
+
+        public int AmmoAmount
+        {
+            get { return ammoAmount; }
+            set { ammoAmount = value; }
+        }
+
+        #endregion
+
+        public ammoSupply(Model model, float moveSpeed, int initialHealth, float scale, Camera camera, int amount)
             : base(model, moveSpeed, initialHealth, scale, camera)
         {
+            AmmoAmount = amount;
             used = false;
         }
 
