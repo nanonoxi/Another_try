@@ -40,6 +40,14 @@ namespace Gameception
             set { grid = value; }
         }
 
+        List<GameObject> objects;
+        public List<GameObject> Objects
+        {
+            get { return objects; }
+            set { objects = value; }
+        }
+
+
         /// <summary>
         /// Total number of X-coords in the grid
         /// </summary>
@@ -104,12 +112,21 @@ namespace Gameception
                     grid[y, x] = new List<GameObject>();
                 }
             }
+            Objects = new List<GameObject>();
         }
 
         #endregion
 
         #region Add/Remove
 
+        // add object to monitor
+        public void AddObject(GameObject o)
+        {
+            if (!Objects.Contains(o))
+                Objects.Add(o);
+        }
+
+        // add object to grid
         public void Add(GameObject o)
         {
             // get object bounds
@@ -282,12 +299,15 @@ namespace Gameception
 
         #endregion
 
-        public void Update(GameObject o)
+        public void Update()
         {
-            Remove(o);
-            RemoveOld(o);
-            CheckCollisions(o);
-            Add(o);
+            foreach (GameObject o in Objects)
+            {
+                Remove(o);
+                RemoveOld(o);
+                CheckCollisions(o);
+                Add(o);
+            }
         }
     }
 }

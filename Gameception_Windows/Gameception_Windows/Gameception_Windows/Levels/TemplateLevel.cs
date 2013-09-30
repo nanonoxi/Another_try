@@ -94,8 +94,9 @@ namespace Gameception
             // add objects to collisionManager
             collisionManager = new CollisionManager(this, 100, 100, 50);
 
-            collisionManager.Add(player1);
-            collisionManager.Add(player2);
+            collisionManager.AddObject(player1);
+            collisionManager.AddObject(player2);
+            collisionManager.AddObject(tempObstacle);
 
             // reset game time after loading all assets
             ScreenManager.Game.ResetElapsedTime();
@@ -133,11 +134,9 @@ namespace Gameception
                 player2.Update();
 
                 tempObstacle.Update();
-                
-                camera.Update(player1, player2);
 
-                collisionManager.Update(player1);
-                collisionManager.Update(player2);
+                collisionManager.Update();
+                camera.Update(player1, player2);
 
             }
 
