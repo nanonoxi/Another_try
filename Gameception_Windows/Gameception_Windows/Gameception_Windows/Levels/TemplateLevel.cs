@@ -167,7 +167,7 @@ namespace Gameception
             // This is not working correctly yet
             foreach (Projectile p in player2.PlayerWeapon.AllProjectiles)
             {
-                if (p.getBoundingShpere().Intersects(tempObstacle.getBoundingShpere()))
+                if (p.getBoundingSphere().Intersects(tempObstacle.getBoundingSphere()))
                 {
                     p.Active = false;
                     //tempObstacle.Position = player2.Position;
@@ -179,7 +179,7 @@ namespace Gameception
             {
                 foreach(Creep c in minions)
                 {
-                    if (p.getBoundingShpere().Intersects(c.getBoundingShpere()))
+                    if (p.getBoundingSphere().Intersects(c.getBoundingSphere()))
                     {
                         c.takeDamage(p);   
                     }
@@ -188,7 +188,7 @@ namespace Gameception
 
             foreach (ammoSupply a in ammoDrops)
             {
-                if (a.getBoundingShpere().Intersects(player1.getBoundingShpere()))
+                if (a.getBoundingSphere().Intersects(player1.getBoundingSphere()))
                 {
                     player1.Ammo += a.AmmoAmount;
                     a.pickedUp();

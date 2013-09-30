@@ -76,7 +76,7 @@ namespace Gameception
             // Second parameter indicates that player2 is trying to pull something
             if (BeingPulled)
             {
-                if (!(this.getBoundingShpere().Intersects(player2.getBoundingShpere())))
+                if (!(this.getBoundingSphere().Intersects(player2.getBoundingSphere())))
                 {
                     Position += (direction * MovementSpeed);
                 }
@@ -90,7 +90,7 @@ namespace Gameception
             }
             else if (BeingHeld && player2.ObjectHeld)
             {
-                if (!(this.getBoundingShpere().Intersects(player2.getBoundingShpere())))
+                if (!(this.getBoundingSphere().Intersects(player2.getBoundingSphere())))
                 {
                     Vector3 temp = player2.Position;
                     temp.Y += player2.getBoundingShpere().Radius;
