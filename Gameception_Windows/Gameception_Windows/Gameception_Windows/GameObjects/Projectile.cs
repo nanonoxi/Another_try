@@ -44,7 +44,7 @@ namespace Gameception
         }
 
         // Update the state of this projectile
-        public void Update()
+        public override void Update()
         {
             elapsedFrames++;
 

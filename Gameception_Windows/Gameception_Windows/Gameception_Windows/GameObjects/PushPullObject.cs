@@ -26,6 +26,15 @@ namespace Gameception
         // Determines whether this object is being held by NPC
         bool beingHeld;
 
+        // Determines whether this object is being throws
+        bool beingThrown;
+
+        // The direction in which this object is moving
+        Vector3 moveDirection;
+
+        // Allows for a thrown object to gradually slow dows
+        float speedDecrement;
+
         public int DamageDone
         {
             get { return damageDone; }
@@ -50,6 +59,12 @@ namespace Gameception
             set { beingHeld = value; }
         }
 
+        public bool BeingThrown
+        {
+            get { return beingThrown; }
+            set { beingThrown = value; }
+        }
+
         #endregion
 
         // Constructs a new object
@@ -63,11 +78,32 @@ namespace Gameception
         // Sets all appropriate variables when the object is being pulled by NPC
         public void pull(Vector3 npcPosition, Player p2)
         {
-            BeingPulled = true;
+            /*BeingPulled = true;
             Target = npcPosition;
-
-            direction = Vector3.Normalize(Target - Position);
             player2 = p2;
+
+            //direction = Vector3.Normalize(Target - Position);
+
+            Vector3 temp = player2.Position;
+            temp.Y += player2.getBoundingSphere().Radius;
+            direction = Vector3.Normalize(temp - Position);*/
+
+            BeingThrown = false;
+            BeingHeld = true;
+            player2 = p2;
+            player2.ObjectHeld = true;
+        }
+
+        // Throws this object in a particular direction
+        public void push()
+        {
+            bool throwObject = handleControls();
+            
+            if (throwObject == true)
+            {
+                BeingThrown = true;
+                speedDecrement = 0;
+            }
         }
 
         // Updates this gameObject
@@ -76,13 +112,13 @@ namespace Gameception
             // Second parameter indicates that player2 is trying to pull something
             if (BeingPulled)
             {
-                if (!(this.getBoundingShpere().Intersects(player2.getBoundingShpere())))
+                /*if (!(this.getBoundingSphere().Intersects(player2.getBoundingSphere())))
                 {
                     Position += (direction * MovementSpeed);
                 }
-                else
+                else*/
                 {
-                    player2.CanMove = true;
+                    player2.CanMove = false;
                     player2.ObjectHeld = true;
                     BeingPulled = false;
                     BeingHeld = true;
@@ -90,22 +126,91 @@ namespace Gameception
             }
             else if (BeingHeld && player2.ObjectHeld)
             {
-                if (!(this.getBoundingShpere().Intersects(player2.getBoundingShpere())))
+                /*if (!(this.getBoundingSphere().Intersects(player2.getBoundingSphere())))
                 {
                     Vector3 temp = player2.Position;
-                    temp.Y += player2.getBoundingShpere().Radius;
+                    temp.Y += player2.getBoundingSphere().Radius;
 
                     //direction = Vector3.Normalize(player2.Position - Position);
                     direction = Vector3.Normalize(temp - Position);
                     Position += (direction * MovementSpeed);
+                }*/
+                handleControls();
+            }
+            else if (BeingThrown)
+            {
+                if (speedDecrement < (MovementSpeed * 20))
+                {
+                    Position = Position + moveDirection * ((MovementSpeed * 20) - speedDecrement);
+                    speedDecrement += 0.01f;
+                }
+                else
+                {
+                    BeingThrown = false;
                 }
             }
             else
             {
+                // First check if the object was being held before releasing it
+                if (BeingHeld == true)
+                {
+                    push();
+                }
+
                 BeingHeld = false;
                 BeingPulled = false;
             }
+            
             base.Update();
+        }
+
+        // Responds to player control
+        public bool handleControls()
+        {
+            bool directionHeld = false;
+            moveDirection = Vector3.Zero;
+
+            if (BeingHeld)
+            {
+                KeyboardState keyboard = Keyboard.GetState();
+                GamePadState gamepad = GamePad.GetState(PlayerIndex.Two);
+
+                Keys Up = player2.Up;
+                Keys Down = player2.Down;
+                Keys Left = player2.Left;
+                Keys Right = player2.Right;
+
+                if (Position != PreviousPosition)
+                {
+                    moveDirection = Position - PreviousPosition;
+                }
+
+                PreviousPosition = Position;
+
+                if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
+                {
+                    Position = Position + Vector3.UnitZ * MovementSpeed;
+                    directionHeld = true;
+                }
+                else if (keyboard.IsKeyDown(Down) || (gamepad.ThumbSticks.Left.Y < 0))
+                {
+                    Position = Position + Vector3.UnitZ * (-MovementSpeed);
+                    directionHeld = true;
+                }
+
+                if (keyboard.IsKeyDown(Right) || (gamepad.ThumbSticks.Left.X > 0))
+                {
+                    Position = Position + Vector3.UnitX * (-MovementSpeed);
+                    directionHeld = true;
+                }
+                else if (keyboard.IsKeyDown(Left) || (gamepad.ThumbSticks.Left.X < 0))
+                {
+                    Position = Position + Vector3.UnitX * MovementSpeed;
+                    directionHeld = true;
+                }
+            }
+
+            return directionHeld;
         }
     }
 }

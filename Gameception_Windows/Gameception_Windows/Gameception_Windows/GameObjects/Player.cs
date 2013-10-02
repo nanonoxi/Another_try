@@ -16,7 +16,7 @@ namespace Gameception
         SoundManager soundManager;
 
         // player control keys
-        Keys Up, Right, Down, Left, Fire;
+        public Keys Up, Right, Down, Left, Fire;
 
         // The direction the player is facing, used for firing weapons
         Vector3 playerFacing;
