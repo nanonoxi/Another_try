@@ -273,7 +273,7 @@
     </Compile>
     <Compile Include="Models\tree.jpg">
       <Name>tree</Name>
-	</Compile>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MenuTitles\anykeytocontinue.png">
@@ -294,7 +294,7 @@
       <Name>crash_level</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
-	</Compile>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MenuTitles\endgamemenu.png">
@@ -404,6 +404,13 @@
       <Name>more excuses</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Cube.fbx">
+      <Name>Cube</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
