@@ -155,6 +155,22 @@ namespace Gameception
                     {
                         effect.EnableDefaultLighting();
 
+                        // Three Directional Lights for the scene
+                        effect.DirectionalLight0.Enabled = true;
+                        effect.DirectionalLight0.Direction = new Vector3(0, 0, 1);
+                        effect.DirectionalLight0.DiffuseColor = Color.Azure.ToVector3();
+                        effect.DirectionalLight0.SpecularColor = Color.Blue.ToVector3();
+
+                        effect.DirectionalLight1.Enabled = true;
+                        effect.DirectionalLight1.Direction = new Vector3(0, -1, 0);
+                        effect.DirectionalLight1.DiffuseColor = Color.Azure.ToVector3();
+                        effect.DirectionalLight1.SpecularColor = Color.Gold.ToVector3();
+
+                        effect.DirectionalLight2.Enabled = true;
+                        effect.DirectionalLight2.Direction = new Vector3(-1, 0, 0);
+                        effect.DirectionalLight2.DiffuseColor = Color.BurlyWood.ToVector3();
+                        effect.DirectionalLight2.SpecularColor = Color.BurlyWood.ToVector3();
+
                         effect.View = GameCamera.View;
                         effect.Projection = GameCamera.Projection;
                         effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
