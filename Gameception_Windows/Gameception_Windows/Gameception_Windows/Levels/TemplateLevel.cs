@@ -34,6 +34,9 @@ namespace Gameception
 
         float pauseAlpha;
 
+        // Controls drawing of the heads-up display
+        HUD hud;
+
         #endregion
 
         #region Initialization
@@ -89,6 +92,9 @@ namespace Gameception
             }
 
             tempObstacle = new PushPullObject(content.Load<Model>("Models/Cylinder"), 0.1f, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
+
+            // HUD has to be initialised here so that it can have access to the initialised player objects
+            hud = new HUD(this.ScreenManager, player1, player2);
 
             // reset game time after loading all assets
             ScreenManager.Game.ResetElapsedTime();
@@ -260,6 +266,9 @@ namespace Gameception
                 c.Draw();
             foreach (ammoSupply a in ammoDrops)
                 a.Draw();
+
+            // Draw the temp HUD
+            hud.Draw(gameTime);
 
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0 || pauseAlpha > 0)
