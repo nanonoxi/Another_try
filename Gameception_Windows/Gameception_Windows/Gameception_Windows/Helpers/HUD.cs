@@ -35,6 +35,7 @@ namespace Gameception
             spriteBatch.Begin();
 
             spriteBatch.DrawString(HUDFont, "Player 1 Health: " + player1.Health, new Vector2(15, 15), Color.White);
+            spriteBatch.DrawString(HUDFont, "Ammo: " + player1.Ammo, new Vector2(15, 60), Color.White);
             spriteBatch.DrawString(HUDFont, player2.Health + " :Player 2 Health", new Vector2(screenManager.GraphicsDevice.Viewport.Width - 390, 15), Color.White);
 
             spriteBatch.End();
