@@ -176,7 +176,6 @@ namespace Gameception
                 if (p.getBoundingSphere().Intersects(tempObstacle.getBoundingSphere()))
                 {
                     p.Active = false;
-                    //tempObstacle.Position = player2.Position;
                     tempObstacle.pull(player2.Position, player2);
                 }
             }
@@ -187,7 +186,18 @@ namespace Gameception
                 {
                     if (p.getBoundingSphere().Intersects(c.getBoundingSphere()))
                     {
-                        c.takeDamage(p);   
+                        p.Active = false;
+                        c.takeDamage(p);
+                    }
+                }
+
+                if (p.Active == true)
+                {
+                    if (p.getBoundingSphere().Intersects(player2.getBoundingSphere()))
+                    {
+                        // Player 2 gain health if shot by player 1
+                        p.Active = false;
+                        player2.adjustHealth(10);
                     }
                 }
             }
@@ -198,6 +208,20 @@ namespace Gameception
                 {
                     player1.Ammo += a.AmmoAmount;
                     a.pickedUp();
+                }
+            }
+
+            foreach (Creep creep in minions)
+            {
+                BoundingSphere creepSphere = creep.getBoundingSphere();
+
+                if (creepSphere.Intersects(player1.getBoundingSphere()))
+                {
+                    player1.adjustHealth(-10);
+                }
+                else if (creepSphere.Intersects(player2.getBoundingSphere()))
+                {
+                    player2.adjustHealth(-10);
                 }
             }
         }

@@ -193,6 +193,9 @@ namespace Gameception
         public void adjustHealth(int amount)
         {
             this.Health += amount;
+
+            // Ensures that health is always a value between 0 and 100
+            this.Health = (int) MathHelper.Clamp(this.Health, 0, 100);
         }
 
         #endregion
