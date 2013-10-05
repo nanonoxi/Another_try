@@ -93,6 +93,8 @@ namespace Gameception
         public void Update()
         {
             elapsedFrames++;
+            Collection<Projectile> inActive = new Collection<Projectile>(); 
+
 
             foreach (Projectile proj in allProjectiles)
             {
@@ -100,6 +102,16 @@ namespace Gameception
                 {
                     proj.Update();
                 }
+                else
+                {
+                    inActive.Add(proj);
+                }
+            }
+
+            // Remove in active projectiles from the game
+            foreach (Projectile p in inActive)
+            {
+                allProjectiles.Remove(p);
             }
         }
 

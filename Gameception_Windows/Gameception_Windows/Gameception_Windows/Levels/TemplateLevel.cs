@@ -276,6 +276,7 @@ namespace Gameception
             // Ensures that models are drawn at correct depth
             DepthStencilState depth = new DepthStencilState();
             depth.DepthBufferEnable = true;
+            depth.DepthBufferWriteEnable = true;
 
             ScreenManager.GraphicsDevice.DepthStencilState = depth;
 
@@ -289,6 +290,14 @@ namespace Gameception
                 c.Draw();
             foreach (ammoSupply a in ammoDrops)
                 a.Draw();
+
+            /*DepthStencilState depth2 = new DepthStencilState();
+            depth2.DepthBufferEnable = true;
+            depth2.DepthBufferWriteEnable = false;
+
+            ScreenManager.GraphicsDevice.DepthStencilState = depth2;
+
+            tempObstacle.Draw();*/
 
             // Draw the temp HUD
             hud.Draw(gameTime);
