@@ -90,8 +90,8 @@ namespace Gameception
             temp.Y += player2.getBoundingSphere().Radius;
             direction = Vector3.Normalize(temp - Position);*/
 
-            // Player 2 can only hold one obstacle at a time
-            if (p2.ObjectHeld == false)
+            // Player 2 can only hold one object at a time and the ability must still be activated (indicated by an inability to move)
+            if (p2.ObjectHeld == false && p2.CanMove == false)
             {
                 BeingThrown = false;
                 BeingHeld = true;

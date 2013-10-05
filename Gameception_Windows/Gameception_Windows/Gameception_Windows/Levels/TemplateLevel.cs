@@ -91,7 +91,7 @@ namespace Gameception
                 minions.Add(baddie);
             }
 
-            tempObstacle = new PushPullObject(content.Load<Model>("Models/Cylinder"), 0.1f, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
+            tempObstacle = new PushPullObject(content.Load<Model>("Models/wumpa_fruit_model"), 0.1f, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
 
             // HUD has to be initialised here so that it can have access to the initialised player objects
             hud = new HUD(this.ScreenManager, player1, player2);
