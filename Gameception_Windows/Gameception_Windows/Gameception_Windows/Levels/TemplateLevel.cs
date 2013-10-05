@@ -114,7 +114,6 @@ namespace Gameception
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            
             base.Update(gameTime, otherScreenHasFocus, false);
 
             ScreenManager.SoundManager.play("title3");

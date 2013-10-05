@@ -141,24 +141,32 @@ namespace Gameception
 
                 if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
                 {
-                    Position = Position + Vector3.UnitZ * MovementSpeed;
-                    rotationAngle = 0f;
+                    //Position = Position + Vector3.UnitZ * MovementSpeed;
+                    //rotationAngle = 0f;
+
+                    Matrix moveForward = Matrix.CreateRotationY(MathHelper.ToRadians(rotationAngle));
+                    Vector3 velocityVector = new Vector3(0, 0, MovementSpeed);
+                    velocityVector = Vector3.Transform(velocityVector, moveForward);
+                    Vector3 tempPosition = new Vector3(Position.X + velocityVector.X, Position.Y, Position.Z + velocityVector.Z);
+                    Position = tempPosition;
                 }
-                else if (keyboard.IsKeyDown(Down) || (gamepad.ThumbSticks.Left.Y < 0))
+                /*else if (keyboard.IsKeyDown(Down) || (gamepad.ThumbSticks.Left.Y < 0))
                 {
                     Position = Position + Vector3.UnitZ * (-MovementSpeed);
                     rotationAngle = 180f;
-                }
+                }*/
 
                 if (keyboard.IsKeyDown(Right) || (gamepad.ThumbSticks.Left.X > 0))
                 {
-                    Position = Position + Vector3.UnitX * (-MovementSpeed);
-                    rotationAngle = 270f;
+                    //Position = Position + Vector3.UnitX * (-MovementSpeed);
+                    //rotationAngle = 270f;
+                    rotationAngle -= 2f;
                 }
                 else if (keyboard.IsKeyDown(Left) || (gamepad.ThumbSticks.Left.X < 0))
                 {
-                    Position = Position + Vector3.UnitX * MovementSpeed;
-                    rotationAngle = 90f;
+                    //Position = Position + Vector3.UnitX * MovementSpeed;
+                    //rotationAngle = 90f;
+                    rotationAngle += 2f;
                 }
             }
 
