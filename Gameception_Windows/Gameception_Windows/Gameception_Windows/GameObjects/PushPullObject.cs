@@ -75,6 +75,8 @@ namespace Gameception
             BeingPulled = false;
         }
 
+        #region Response to Abilities
+
         // Sets all appropriate variables when the object is being pulled by NPC
         public void pull(Vector3 npcPosition, Player p2)
         {
@@ -88,10 +90,14 @@ namespace Gameception
             temp.Y += player2.getBoundingSphere().Radius;
             direction = Vector3.Normalize(temp - Position);*/
 
-            BeingThrown = false;
-            BeingHeld = true;
-            player2 = p2;
-            player2.ObjectHeld = true;
+            // Player 2 can only hold one obstacle at a time
+            if (p2.ObjectHeld == false)
+            {
+                BeingThrown = false;
+                BeingHeld = true;
+                player2 = p2;
+                player2.ObjectHeld = true;
+            }
         }
 
         // Throws this object in a particular direction
@@ -105,6 +111,8 @@ namespace Gameception
                 speedDecrement = 0;
             }
         }
+
+        #endregion
 
         // Updates this gameObject
         public override void Update()
