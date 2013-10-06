@@ -84,7 +84,7 @@ namespace Gameception
 
                 // Play sound here
 
-                ((Player)Owner).Ammo--;
+              //  ((Player)Owner).Ammo--;
                 elapsedFrames = 0;
             }
         }
@@ -93,7 +93,7 @@ namespace Gameception
         public void Update()
         {
             elapsedFrames++;
-
+            
             foreach (Projectile proj in allProjectiles)
             {
                 if (proj.Active)

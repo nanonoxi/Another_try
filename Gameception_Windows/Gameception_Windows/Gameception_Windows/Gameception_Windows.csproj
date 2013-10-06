@@ -107,16 +107,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\Cell.cs" />
+    <Compile Include="AI\Grid.cs" />
+    <Compile Include="AI\Node.cs" />
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="CollisionManager\CollisionManager.cs" />
     <Compile Include="Gameception.cs" />
     <Compile Include="GameObjects\ammoSupply.cs" />
+    <Compile Include="GameObjects\Cortex.cs" />
     <Compile Include="GameObjects\Creep.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\minion.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="GameObjects\Projectile.cs" />
     <Compile Include="GameObjects\PushPullObject.cs" />
+    <Compile Include="GameObjects\Spawner.cs" />
     <Compile Include="GameObjects\Weapon.cs" />
     <Compile Include="Levels\TemplateLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

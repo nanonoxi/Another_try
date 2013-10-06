@@ -188,6 +188,14 @@ namespace Gameception
                 ObjectHeld = false;
                 CanMove = true;
             }
+
+            /*******remove after debugging*************/
+            if (keyboard.IsKeyDown(Keys.LeftShift))
+            {
+                Console.WriteLine("player:" + playerIndex);
+                Console.WriteLine("player x: " + Position.X + " player y: " + Position.Y + " player z: " + Position.Z);
+            }
+
         }
 
         #endregion

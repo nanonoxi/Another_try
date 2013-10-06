@@ -28,9 +28,9 @@ namespace Gameception
         { 
            
             chasePlayerKey = random.Next(1,3);
-            attackRange = 40f;
+            attackRange = 2000f;
             spawnPoint = startPosition;
-            patrolDistance = 50f;
+            patrolDistance = 30f;
            
             float patrolPointX = (float)( patrolDistance*Math.Cos(random.Next(0,361)) );
             patrolPointX = spawnPoint.X - patrolPointX;
@@ -54,8 +54,6 @@ namespace Gameception
         {
             return dropAmmo;
         }
-
-
 
         //update method, patrol if players are out of range,
         //else attack 
@@ -124,6 +122,75 @@ namespace Gameception
 
         }
 
+        //update method, patrol if players are out of range,
+        //else attack 
+        public  void beEvil(Player p1, Player p2, Grid g)
+        {
+
+            distanceToP1 = distanceCheck(p1);
+            distanceToP2 = distanceCheck(p2);
+
+            if (distanceToP1 <= attackRange || distanceToP2 <= attackRange)
+            {
+                onPatrol = false;
+
+                //if both players within range
+                if (distanceToP1 <= attackRange && distanceToP2 <= attackRange)
+                {
+                    //if this minions preference is 1
+                    if (chasePlayerKey == 1)
+                    {
+                       moveTowards( g.getShortestPath(g.getPositionInGrid(this), p1) );
+                    }
+                    // or 2
+                    else
+                    {
+                        moveTowards(g.getShortestPath(g.getPositionInGrid(this), p2));
+                    }
+                }
+
+                else//only one within range
+                {
+
+                    if (chasePlayerKey == 1)
+                    {
+                        //if p1 in range 
+                        //  --> attack p1
+                        if (distanceToP1 <= attackRange)
+                        {
+                            moveTowards(g.getShortestPath(g.getPositionInGrid(this), p1));
+                        }
+
+                        //if p2 in range 
+                        // --> attack p2
+                        if (distanceToP2 <= attackRange)
+                        {
+                            moveTowards(g.getShortestPath(g.getPositionInGrid(this), p2));
+                        }
+                    }
+                    //reverse of above 
+                    //accounting for player prefference
+                    //(chaseplayerkey)
+                    else
+                    {
+                        if (distanceToP2 <= attackRange)
+                        {
+                            moveTowards(g.getShortestPath(g.getPositionInGrid(this), p2));
+                        }
+
+                        if (distanceToP1 <= attackRange)
+                        {
+                            moveTowards(g.getShortestPath(g.getPositionInGrid(this), p1));
+                        }
+                    }
+                }
+            }
+
+            if ((attackRange < distanceToP1) && (attackRange < distanceToP2))
+                patrol();
+
+        }
+
         public float distanceCheck(Player p)
         {
             return distanceCheck(p.Position.X, p.Position.Z) ; 
@@ -179,6 +246,11 @@ namespace Gameception
                 {
                     moveTowards(patrolPoint.X, patrolPoint.Z);
 
+                    /*
+                    if (this.Position.X > 135 || this.Position.Z > 60 ||
+                        this.Position.X < 1.2 || this.Position.Z < 1.2)
+                        movingToPointB = false;
+                    */
                     if( Math.Abs(this.Position.X - patrolPoint.X) < 0.7)
                         if( Math.Abs(this.Position.Z - patrolPoint.Z)< 0.7)
                             movingToPointB = false;
@@ -201,10 +273,15 @@ namespace Gameception
             moveTowards(p.Position.X, p.Position.Z);
         }
 
+        public void moveTowards(Vector3 p)
+        {
+            moveTowards(p.X, p.Z);
+        }
+
         //minion ai 
         public override void moveTowards(float x, float z)
         {
-         /*
+         
             Vector3 oldPosition = this.Position;
    
             // beeline algorithm
@@ -217,7 +294,7 @@ namespace Gameception
                 Position += Vector3.UnitZ * MovementSpeed;
             if (z < this.Position.Z)
                 Position -= Vector3.UnitZ * MovementSpeed;
-            */
+            
         //    getFacingDirection(oldPosition, Position);
           
             
@@ -238,22 +315,6 @@ namespace Gameception
             //use two points (direction of motion) to get direction model should be facing
 
             //ja, this would be great but no idea where to start
-        }
-
-        
-        public override void takeDamage(Projectile p)
-        {
-            this.Health -= (int)p.getDamage();
-
-            if(this.Health <=0)
-            {
-                isDead = true;
-            }
-        }
-
-        public bool isDeadCheck()
-        {
-            return isDead;
         }
 
         public override void getPoints()

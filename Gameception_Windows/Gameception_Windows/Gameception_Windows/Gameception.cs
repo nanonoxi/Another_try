@@ -34,8 +34,8 @@ namespace Gameception
             Content.RootDirectory = "Content";
 
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1920;
-            graphics.PreferredBackBufferHeight = 1080;
+            graphics.PreferredBackBufferWidth = 800;//1920;
+            graphics.PreferredBackBufferHeight = 600;//1080;
             graphics.PreferMultiSampling = true;
             //graphics.IsFullScreen = true;
 

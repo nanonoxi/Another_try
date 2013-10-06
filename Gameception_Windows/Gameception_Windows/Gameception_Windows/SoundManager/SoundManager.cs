@@ -21,7 +21,7 @@ namespace Gameception
         public SoundManager()
         {
             sounds = new List<SoundObject>();
-            volumeLevel = .5f;
+            volumeLevel = .0f;
 
             MediaPlayer.Volume = volumeLevel;
             SoundEffect.MasterVolume = volumeLevel;
