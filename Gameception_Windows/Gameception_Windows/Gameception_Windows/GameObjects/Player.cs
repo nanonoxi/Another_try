@@ -177,7 +177,11 @@ namespace Gameception
                 {
                     if (ammo > 0)
                     {
-                        PlayerWeapon.fire(GameCamera, Position, PlayerFacing);
+                        Matrix forward = Matrix.CreateRotationY(MathHelper.ToRadians(rotationAngle));
+                        Vector3 shootingDirection = new Vector3(0, 0, PlayerFacing.Z);
+                        shootingDirection = Vector3.Transform(shootingDirection, forward);
+
+                        PlayerWeapon.fire(GameCamera, Position, shootingDirection);
                     }
                     else
                     {
@@ -186,7 +190,11 @@ namespace Gameception
                 }
                 else if (playerIndex == PlayerIndex.Two && ObjectHeld == false) // Player 2 can't move while pulling an object
                 {
-                    PlayerWeapon.fire(GameCamera, Position, PlayerFacing);
+                    Matrix forward = Matrix.CreateRotationY(MathHelper.ToRadians(rotationAngle));
+                    Vector3 shootingDirection = new Vector3(0, 0, PlayerFacing.Z);
+                    shootingDirection = Vector3.Transform(shootingDirection, forward);
+
+                    PlayerWeapon.fire(GameCamera, Position, shootingDirection);
                     soundManager.play("pew");
                     CanMove = false;
                 }
