@@ -261,7 +261,12 @@ namespace Gameception
 
                         if (BeingHeld)
                         {
-                            counter++;
+                            effect.Alpha = 0.5f;
+                            //counter++;
+                        }
+                        else
+                        {
+                            effect.Alpha = 1f;
                         }
                     }
 

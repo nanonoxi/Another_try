@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Content;
@@ -32,6 +33,8 @@ namespace Gameception
         List<ammoSupply> ammoDrops;
         GameObject ground;
 
+        Collection<PushPullObject> apples;
+
         float pauseAlpha;
 
         // Controls drawing of the heads-up display
@@ -54,6 +57,7 @@ namespace Gameception
         {
             minions = new List<Creep>();
             ammoDrops = new List<ammoSupply>();
+            apples = new Collection<PushPullObject>();
 
             camera = new Camera(this.ScreenManager.Game.Graphics);
 
@@ -79,8 +83,6 @@ namespace Gameception
             player1.setSoundManager(ScreenManager.SoundManager);
             player2.setSoundManager(ScreenManager.SoundManager);
 
-            
-
             Random r = new Random();
             for (int i = 0; i < 2; i++)
             {
@@ -91,6 +93,14 @@ namespace Gameception
                 minions.Add(baddie);
             }
 
+            Model wumpaFruit = content.Load<Model>("Models/wumpa_fruit_model");
+
+            // Create the apples to be placed in the world
+            for (int a = 0; a < 10; a++)
+            {
+                PushPullObject temp = new PushPullObject(wumpaFruit, 0.1f, 100, new Vector3(0, 4f, 15 + (a * 10)), 0.5f, camera, 10);
+                apples.Add(temp);
+            }
             tempObstacle = new PushPullObject(content.Load<Model>("Models/wumpa_fruit_model"), 0.1f, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
 
             // HUD has to be initialised here so that it can have access to the initialised player objects
@@ -163,6 +173,11 @@ namespace Gameception
                 }
             }
 
+            foreach (PushPullObject apple in apples)
+            {
+                apple.Update();
+            }
+
             checkCollisions();
         }
 
@@ -175,11 +190,15 @@ namespace Gameception
             {
                 if (objectPulled == false)
                 {
-                    if (p.getBoundingSphere().Intersects(tempObstacle.getBoundingSphere()))
+                    foreach (PushPullObject apple in apples)
                     {
-                        p.Active = false;
-                        tempObstacle.pull(player2.Position, player2);
-                        objectPulled = true;
+                        if (p.getBoundingSphere().Intersects(apple.getBoundingSphere()))
+                        {
+                            p.Active = false;
+                            apple.pull(player2.Position, player2);
+                            objectPulled = true;
+                            break;
+                        }
                     }
                 }
                 else
@@ -299,6 +318,11 @@ namespace Gameception
                 c.Draw();
             foreach (ammoSupply a in ammoDrops)
                 a.Draw();
+
+            foreach (PushPullObject apple in apples)
+            {
+                apple.Draw();
+            }
 
             /*DepthStencilState depth2 = new DepthStencilState();
             depth2.DepthBufferEnable = true;
