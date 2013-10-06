@@ -73,7 +73,7 @@ namespace Gameception
 
             player2 = new Player(content.Load<Model>("Models/npcModel"), 0.1f, 100, new Vector3(-5, 4f, 0), 0.6f, camera, PlayerIndex.Two);
             player2.setKeys(Keys.Up, Keys.Right, Keys.Down, Keys.Left, Keys.NumPad0, PlayerIndex.Two);
-            Weapon player2Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"), player2);
+            Weapon player2Weapon = new Weapon(30f, content.Load<Model>("Models/sphereHighPoly"), player2);
             player2.PlayerWeapon = player2Weapon;
 
             player1.setSoundManager(ScreenManager.SoundManager);
@@ -169,13 +169,22 @@ namespace Gameception
         // Temp collision detection
         public void checkCollisions()
         {
-            // This is not working correctly yet
+            bool objectPulled = false;
+
             foreach (Projectile p in player2.PlayerWeapon.AllProjectiles)
             {
-                if (p.getBoundingSphere().Intersects(tempObstacle.getBoundingSphere()))
+                if (objectPulled == false)
+                {
+                    if (p.getBoundingSphere().Intersects(tempObstacle.getBoundingSphere()))
+                    {
+                        p.Active = false;
+                        tempObstacle.pull(player2.Position, player2);
+                        objectPulled = true;
+                    }
+                }
+                else
                 {
                     p.Active = false;
-                    tempObstacle.pull(player2.Position, player2);
                 }
             }
 
