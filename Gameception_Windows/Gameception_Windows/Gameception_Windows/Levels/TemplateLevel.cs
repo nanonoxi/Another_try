@@ -50,9 +50,6 @@ namespace Gameception
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
 
-        // Needs to move
-        PushPullObject tempObstacle;
-
         public override void LoadContent()
         {
             minions = new List<Creep>();
@@ -78,6 +75,7 @@ namespace Gameception
             player2 = new Player(content.Load<Model>("Models/npcModel"), 0.1f, 100, new Vector3(-5, 4f, 0), 0.6f, camera, PlayerIndex.Two);
             player2.setKeys(Keys.Up, Keys.Right, Keys.Down, Keys.Left, Keys.NumPad0, PlayerIndex.Two);
             Weapon player2Weapon = new Weapon(30f, content.Load<Model>("Models/sphereHighPoly"), player2);
+            player2Weapon.ProjectileSpeed = 3f;
             player2.PlayerWeapon = player2Weapon;
 
             player1.setSoundManager(ScreenManager.SoundManager);
@@ -101,7 +99,6 @@ namespace Gameception
                 PushPullObject temp = new PushPullObject(wumpaFruit, 0.1f, 100, new Vector3(0, 4f, 15 + (a * 10)), 0.5f, camera, 10);
                 apples.Add(temp);
             }
-            tempObstacle = new PushPullObject(content.Load<Model>("Models/wumpa_fruit_model"), 0.1f, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
 
             // HUD has to be initialised here so that it can have access to the initialised player objects
             hud = new HUD(this.ScreenManager, player1, player2);
@@ -139,8 +136,6 @@ namespace Gameception
             {
                 player1.Update();
                 player2.Update();
-
-                tempObstacle.Update();
                 
                 camera.Update(player1, player2);
             }
@@ -311,8 +306,6 @@ namespace Gameception
             ground.Draw();
             player1.Draw();
             player2.Draw();
-
-            tempObstacle.Draw();
 
             foreach (Creep c in minions)
                 c.Draw();
