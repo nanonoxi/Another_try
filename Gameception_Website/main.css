@@ -1,0 +1,66 @@
+body
+{
+	margin: 0 auto;
+	padding: 10px;
+	color: #00AA00;
+	background-color: #000000;
+	font-family: Garamond;
+	font-size: 18pt;
+	text-align: center;
+	width: 900px;
+}
+
+.tablerow
+{
+	width: 450px;
+}
+
+.textright
+{
+	font-family: Garamond;
+	font-size: 16pt;
+	margin-left: 450px;
+	float: right;
+	text-align: right;
+}
+
+.textleft
+{
+	font-family: Garamond;
+	font-size: 16pt;
+	margin-right: 450px;
+	float: left;
+	text-align: left;
+}
+
+.image
+{
+	display: inline-block;
+	text-align: center;
+	width: 450px;
+	height: 300px;
+	margin: 0 0 0 0;
+}
+
+.credits_heading
+{
+	font-weight: bold;
+	text-align: center;
+	color: #BBBBBB;
+}
+
+.credits_body
+{
+	font-weight: regular;
+	font-size: 14pt;
+	text-align: center;
+	color: #BBBBBB;
+}
+
+.credits_email
+{
+	font-weight: regular;
+	font-size: 14pt;
+	text-align: center;
+	color: #AADDAA;
+}
