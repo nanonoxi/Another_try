@@ -56,6 +56,8 @@ namespace Gameception
             {
                 this.Position = this.Position + MovementSpeed * direction;
             }
+
+            base.Update();
         }
 
         public float getDamage() 

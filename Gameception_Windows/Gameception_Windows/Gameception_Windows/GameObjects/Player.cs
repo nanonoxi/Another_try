@@ -225,18 +225,21 @@ namespace Gameception
             // Only draw a gameObject if it's active
             if (Active)
             {
-                foreach (ModelMesh mesh in ObjectModel.Meshes)
+                if (InFrustrum)
                 {
-                    foreach (BasicEffect effect in mesh.Effects)
+                    foreach (ModelMesh mesh in ObjectModel.Meshes)
                     {
-                        effect.EnableDefaultLighting();
+                        foreach (BasicEffect effect in mesh.Effects)
+                        {
+                            effect.EnableDefaultLighting();
 
-                        effect.View = GameCamera.View;
-                        effect.Projection = GameCamera.Projection;
-                        effect.World = rotation * transforms[mesh.ParentBone.Index] * Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
+                            effect.View = GameCamera.View;
+                            effect.Projection = GameCamera.Projection;
+                            effect.World = rotation * transforms[mesh.ParentBone.Index] * Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
+                        }
+
+                        mesh.Draw();
                     }
-
-                    mesh.Draw();
                 }
             }
 

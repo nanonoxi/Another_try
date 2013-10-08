@@ -117,22 +117,22 @@ namespace Gameception
             Texture2D mapTexture = content.Load<Texture2D>("Levels/maze_map");
             mapTexture.GetData<Color>(map);
 
-            float z = -160;
-            float x = -160;
+            float z = -320;
+            float x = -320;
 
             for (int i = 0; i < map.Length; i++)
             {
-                x += 5;
+                x += 6.602f;
 
                 if ((i+1) % 64 == 0)
                 {
-                    z += 5;
-                    x = -160;
+                    z += 6.602f;
+                    x = -320;
                 }
                 if (map[i] == Color.Black)
                 {
-                    Vector3 objectPosition = new Vector3(x, 1.5f, z);
-                    walls.Add(new GameObject(wallModel, 0, 0, objectPosition, 1f, camera)); 
+                    Vector3 objectPosition = new Vector3(x, 4.5f, z);
+                    walls.Add(new GameObject(wallModel, 0, 0, objectPosition, 1.8f, camera)); 
                 }
             }
 
@@ -192,15 +192,31 @@ namespace Gameception
                 camera.Update(player1, player2);
             }
 
-            //checkCollisions();
+            foreach (GameObject gameobj in walls)
+            {
+                gameobj.Update();
+            }
+
+            checkCollisions();
         }
 
         // Performs collision detection
         public void checkCollisions()
         {
-            if (cube.getBoundingSphere().Intersects(player1.getBoundingSphere()))
+            /*if (cube.getBoundingSphere().Intersects(player1.getBoundingSphere()))
             {
                 player1.revertPosition();
+            }*/
+
+            foreach (GameObject gameObj in walls)
+            {
+                if (gameObj.InFrustrum)
+                {
+                    if (gameObj.getBoundingSphere().Intersects(player2.getBoundingSphere()))
+                    {
+                        player2.revertPosition();
+                    }
+                }
             }
         }
 

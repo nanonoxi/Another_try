@@ -40,6 +40,9 @@ namespace Gameception
         // An alternate texture for this gameObject
         private Texture2D alternateTexture;
 
+        // Determines whether this object is in the view frustrum
+        private bool inFrustrum;
+
         #region Properties
 
         public Model ObjectModel
@@ -102,6 +105,12 @@ namespace Gameception
             set { alternateTexture = value; }
         }
 
+        public bool InFrustrum
+        {
+            get { return inFrustrum; }
+            set { inFrustrum = value; }
+        }
+
         #endregion
 
         public GameObject(Model model, float moveSpeed, int initialHealth, Vector3 startPosition, float scale, Camera camera)
@@ -154,9 +163,12 @@ namespace Gameception
             return objectBoundingShere;
         }
 
+        Matrix world = new Matrix();
+        int counter = 0;
+
         public virtual void Update()
         {
-            // do nothing
+            inFrustrum = gameCamera.inView(this.getBoundingSphere());
         }
 
         // Draw the model to the screen
@@ -168,40 +180,43 @@ namespace Gameception
             // Only draw a gameObject if it's active
             if (Active)
             {
-                foreach (ModelMesh mesh in ObjectModel.Meshes)
+                if (inFrustrum)
                 {
-                    foreach (BasicEffect effect in mesh.Effects)
+                    foreach (ModelMesh mesh in ObjectModel.Meshes)
                     {
-                        effect.EnableDefaultLighting();
-
-                        // Three Directional Lights for the scene
-                        effect.DirectionalLight0.Enabled = true;
-                        effect.DirectionalLight0.Direction = new Vector3(0, 0, 1);
-                        effect.DirectionalLight0.DiffuseColor = Color.Azure.ToVector3();
-                        effect.DirectionalLight0.SpecularColor = Color.Blue.ToVector3();
-
-                        effect.DirectionalLight1.Enabled = true;
-                        effect.DirectionalLight1.Direction = new Vector3(0, -1, 0);
-                        effect.DirectionalLight1.DiffuseColor = Color.Azure.ToVector3();
-                        effect.DirectionalLight1.SpecularColor = Color.Gold.ToVector3();
-
-                        effect.DirectionalLight2.Enabled = true;
-                        effect.DirectionalLight2.Direction = new Vector3(-1, 0, 0);
-                        effect.DirectionalLight2.DiffuseColor = Color.BurlyWood.ToVector3();
-                        effect.DirectionalLight2.SpecularColor = Color.BurlyWood.ToVector3();
-
-                        if (UseAlternateTexture && AlternateTexture != null)
+                        foreach (BasicEffect effect in mesh.Effects)
                         {
-                            effect.TextureEnabled = true;
-                            effect.Texture = AlternateTexture;
+                            effect.EnableDefaultLighting();
+
+                            // Three Directional Lights for the scene
+                            effect.DirectionalLight0.Enabled = true;
+                            effect.DirectionalLight0.Direction = new Vector3(0, 0, 1);
+                            effect.DirectionalLight0.DiffuseColor = Color.Azure.ToVector3();
+                            effect.DirectionalLight0.SpecularColor = Color.Blue.ToVector3();
+
+                            effect.DirectionalLight1.Enabled = true;
+                            effect.DirectionalLight1.Direction = new Vector3(0, -1, 0);
+                            effect.DirectionalLight1.DiffuseColor = Color.Azure.ToVector3();
+                            effect.DirectionalLight1.SpecularColor = Color.Gold.ToVector3();
+
+                            effect.DirectionalLight2.Enabled = true;
+                            effect.DirectionalLight2.Direction = new Vector3(-1, 0, 0);
+                            effect.DirectionalLight2.DiffuseColor = Color.BurlyWood.ToVector3();
+                            effect.DirectionalLight2.SpecularColor = Color.BurlyWood.ToVector3();
+
+                            if (UseAlternateTexture && AlternateTexture != null)
+                            {
+                                effect.TextureEnabled = true;
+                                effect.Texture = AlternateTexture;
+                            }
+
+                            effect.View = GameCamera.View;
+                            effect.Projection = GameCamera.Projection;
+                            effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
                         }
 
-                        effect.View = GameCamera.View;
-                        effect.Projection = GameCamera.Projection;
-                        effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
+                        mesh.Draw();
                     }
-
-                    mesh.Draw();
                 }
             }
         }
