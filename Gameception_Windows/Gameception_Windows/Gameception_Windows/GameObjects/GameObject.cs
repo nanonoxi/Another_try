@@ -163,9 +163,6 @@ namespace Gameception
             return objectBoundingShere;
         }
 
-        Matrix world = new Matrix();
-        int counter = 0;
-
         public virtual void Update()
         {
             inFrustrum = gameCamera.inView(this.getBoundingSphere());

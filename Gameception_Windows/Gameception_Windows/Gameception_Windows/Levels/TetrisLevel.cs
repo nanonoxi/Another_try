@@ -132,7 +132,10 @@ namespace Gameception
                 if (map[i] == Color.Black)
                 {
                     Vector3 objectPosition = new Vector3(x, 4.5f, z);
-                    walls.Add(new GameObject(wallModel, 0, 0, objectPosition, 1.8f, camera)); 
+                    GameObject temp = new GameObject(wallModel, 0, 0, objectPosition, 1.8f, camera);
+                    temp.UseAlternateTexture = true;
+                    temp.AlternateTexture = groundTexture;
+                    walls.Add(temp); 
                 }
             }
 
