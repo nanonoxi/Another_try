@@ -196,6 +196,7 @@ namespace Gameception
             {
                 gameobj.Update();
             }
+            ground.Update();
 
             checkCollisions();
         }
