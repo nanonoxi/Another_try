@@ -36,6 +36,9 @@ namespace Gameception
         // The ammount of ammunition the player has
         private int ammo;
 
+        // The score of this player
+        private int score;
+
         #endregion
 
         #region Properties
@@ -64,11 +67,16 @@ namespace Gameception
             set { playerWeapon = value; }
         }
 
-
         public int Ammo
         {
             get { return ammo; }
             set { ammo = value; }
+        }
+
+        public int Score
+        {
+            get { return score; }
+            set { score = value; }
         }
         #endregion
 
@@ -178,10 +186,12 @@ namespace Gameception
                     if (ammo > 0)
                     {
                         Matrix forward = Matrix.CreateRotationY(MathHelper.ToRadians(rotationAngle));
-                        Vector3 shootingDirection = new Vector3(0, 0, PlayerFacing.Z);
+                        Vector3 shootingDirection = new Vector3(0, 0, MovementSpeed);
                         shootingDirection = Vector3.Transform(shootingDirection, forward);
 
-                        PlayerWeapon.fire(GameCamera, Position, shootingDirection);
+                        Vector3 shotVector = new Vector3(Position.X + shootingDirection.X, Position.Y, Position.Z + shootingDirection.Z);
+
+                        PlayerWeapon.fire(GameCamera, Position, shotVector);
                     }
                     else
                     {

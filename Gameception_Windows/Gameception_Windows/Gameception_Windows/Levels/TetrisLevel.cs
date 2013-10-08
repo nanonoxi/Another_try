@@ -33,8 +33,14 @@ namespace Gameception
         // The model to be used for the wall
         private Model wallModel;
 
+        // The model for the apples
+        private Model appleModel;
+
         // All wall objects in the game
         private Collection<GameObject> walls;
+
+        // The collectible apples in the game
+        private Collection<GameObject> apples;
 
         // The layout for this level
         private Texture2D levelLayout;
@@ -78,6 +84,7 @@ namespace Gameception
             cube = new GameObject(content.Load<Model>("Models/Cube"), 0, 0, new Vector3(15,1.5f,0),1f,camera);
 
             wallModel = content.Load<Model>("Models/Cube");
+            appleModel = content.Load<Model>("Models/wumpa_fruit_model");
 
             // player set up should move
             // also, perhaps two separate player objects for Player1 and NPC, inheriting from class Player,
@@ -112,9 +119,10 @@ namespace Gameception
         public void loadLevel()
         {
             walls = new Collection<GameObject>();
+            apples = new Collection<GameObject>();
 
             Color [] map = new Color[64*64];
-            Texture2D mapTexture = content.Load<Texture2D>("Levels/maze_map");
+            Texture2D mapTexture = content.Load<Texture2D>("Levels/maze_map_apples");
             mapTexture.GetData<Color>(map);
 
             float z = -320;
@@ -124,7 +132,7 @@ namespace Gameception
             {
                 x += 6.602f;
 
-                if ((i+1) % 64 == 0)
+                if (i % 64 == 0)
                 {
                     z += 6.602f;
                     x = -320;
@@ -136,6 +144,20 @@ namespace Gameception
                     temp.UseAlternateTexture = true;
                     temp.AlternateTexture = groundTexture;
                     walls.Add(temp);
+                }
+                else if (map[i].R == 100 && map[i].G == 100 && map[i].B == 100)
+                {
+                    player1.Position = new Vector3(x, player1.Position.Y, z);
+                }
+                else if (map[i].R == 200 && map[i].G == 200 && map[i].B == 200)
+                {
+                    player2.Position = new Vector3(x, player2.Position.Y, z);
+                }
+                else if (map[i] == Color.Red)
+                {
+                    Vector3 objectPosition = new Vector3(x, 1.5f, z);
+                    GameObject temp = new GameObject(appleModel, 0, 0, objectPosition, 1.5f, camera);
+                    apples.Add(temp);
                 }
             }
 
@@ -199,9 +221,14 @@ namespace Gameception
             {
                 gameobj.Update();
             }
+
+            foreach (GameObject a in apples)
+            {
+                a.Update();
+            }
             ground.Update();
 
-            checkCollisions();
+            //checkCollisions();
         }
 
         // Performs collision detection
@@ -284,11 +311,18 @@ namespace Gameception
             foreach (GameObject gameObj in walls)
             {
                 gameObj.Draw();
-                BoundingSphereRenderer.Render(gameObj.getBoundingSphere(), ScreenManager.GraphicsDevice, camera.View, camera.Projection, Color.Red);
+                //BoundingSphereRenderer.Render(gameObj.getBoundingSphere(), ScreenManager.GraphicsDevice, camera.View, camera.Projection, Color.Red);
+            }
+
+            foreach (GameObject a in apples)
+            {
+                a.Draw();
             }
 
             player1.Draw();
             player2.Draw();
+
+            hud.Draw(gameTime);
 
             BoundingSphereRenderer.Render(player2.getBoundingSphere(), ScreenManager.GraphicsDevice, camera.View, camera.Projection, Color.Green);
             BoundingSphereRenderer.Render(player1.getBoundingSphere(), ScreenManager.GraphicsDevice, camera.View, camera.Projection, Color.Red);
