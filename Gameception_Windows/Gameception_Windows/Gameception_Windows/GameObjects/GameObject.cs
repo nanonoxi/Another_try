@@ -34,6 +34,12 @@ namespace Gameception
         // Determines whether or not this object is active
         private bool active;
 
+        // Used to determine whether or not to use the alternate texture
+        private bool useAlternateTexture;
+
+        // An alternate texture for this gameObject
+        private Texture2D alternateTexture;
+
         #region Properties
 
         public Model ObjectModel
@@ -84,6 +90,18 @@ namespace Gameception
             set { active = value; }
         }
 
+        public bool UseAlternateTexture
+        {
+            get { return useAlternateTexture; }
+            set { useAlternateTexture = value; }
+        }
+
+        public Texture2D AlternateTexture
+        {
+            get { return alternateTexture; }
+            set { alternateTexture = value; }
+        }
+
         #endregion
 
         public GameObject(Model model, float moveSpeed, int initialHealth, Vector3 startPosition, float scale, Camera camera)
@@ -92,6 +110,7 @@ namespace Gameception
             MovementSpeed = moveSpeed;
             Health = initialHealth;
             Position = startPosition;
+            PreviousPosition = Position;
             ScaleFactor = scale;
             GameCamera = camera;
 
@@ -170,6 +189,12 @@ namespace Gameception
                         effect.DirectionalLight2.Direction = new Vector3(-1, 0, 0);
                         effect.DirectionalLight2.DiffuseColor = Color.BurlyWood.ToVector3();
                         effect.DirectionalLight2.SpecularColor = Color.BurlyWood.ToVector3();
+
+                        if (UseAlternateTexture && AlternateTexture != null)
+                        {
+                            effect.TextureEnabled = true;
+                            effect.Texture = AlternateTexture;
+                        }
 
                         effect.View = GameCamera.View;
                         effect.Projection = GameCamera.Projection;
