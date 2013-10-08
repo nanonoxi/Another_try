@@ -135,7 +135,7 @@ namespace Gameception
                     GameObject temp = new GameObject(wallModel, 0, 0, objectPosition, 1.8f, camera);
                     temp.UseAlternateTexture = true;
                     temp.AlternateTexture = groundTexture;
-                    walls.Add(temp); 
+                    walls.Add(temp);
                 }
             }
 
