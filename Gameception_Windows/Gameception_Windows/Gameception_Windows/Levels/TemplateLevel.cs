@@ -31,7 +31,8 @@ namespace Gameception
         List<Creep> minions;
         ammoSupply ammo;
         List<ammoSupply> ammoDrops;
-        GameObject ground;
+        GroundObject ground;
+        Model model;
 
         float pauseAlpha;
 
@@ -59,7 +60,13 @@ namespace Gameception
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
             gameFont = content.Load<SpriteFont>("Fonts/gamefont");
-            ground = new GameObject(content.Load<Model>("Models/crash_level"), 0, 0, Vector3.Zero, 6f, camera);
+
+            model = content.Load<Model>("Models/Ground");
+
+            ground = new GroundObject(ScreenManager.GraphicsDevice, camera);
+            ground.GroundModel = content.Load<Model>("Models/Ground");
+            ground.GroundTexture = content.Load<Texture2D>("Backgrounds/background_0");
+            // = new GameObject(content.Load<Model>("Models/crash_level"), 0, 0, Vector3.Zero, 6f, camera);
             
             // player set up should move
             // also, perhaps two separate player objects for Player1 and NPC, inheriting from class Player,
@@ -252,7 +259,7 @@ namespace Gameception
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
+             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
 
             // Ensures that models are drawn at correct depth
             DepthStencilState depth = new DepthStencilState();
@@ -276,7 +283,7 @@ namespace Gameception
 
             spriteBatch.DrawString(gameFont, ""+collision, Vector2.Zero, Color.White);
             spriteBatch.End();
-
+    
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0 || pauseAlpha > 0)
             {
