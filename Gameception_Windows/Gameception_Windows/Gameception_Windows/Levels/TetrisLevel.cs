@@ -42,14 +42,8 @@ namespace Gameception
         // The collectible apples in the game
         private Collection<GameObject> apples;
 
-        // The layout for this level
-        private Texture2D levelLayout;
-
         // Draws the HUD for this level
         HUD hud;
-
-        // Used to read the map layout
-        Stream fileStream;
 
         float pauseAlpha;
 
@@ -228,7 +222,9 @@ namespace Gameception
             }
             ground.Update();
 
-            //checkCollisions();
+            checkCollisions();
+
+            checkScores();
         }
 
         // Performs collision detection
@@ -239,15 +235,45 @@ namespace Gameception
                 player1.revertPosition();
             }*/
 
+            foreach (GameObject apple in apples)
+            {
+                if (apple.InFrustrum && apple.Active)
+                {
+                    BoundingSphere appleSphere = apple.getBoundingSphere();
+
+                    if (appleSphere.Intersects(player1.getBoundingSphere()))
+                    {
+                        apple.Active = false;
+                        player1.Score += 10;
+                    }
+                    else if (appleSphere.Intersects(player2.getBoundingSphere()))
+                    {
+                        apple.Active = false;
+                        player2.Score += 10;
+                    }
+                }
+            }
+
             foreach (GameObject gameObj in walls)
             {
                 if (gameObj.InFrustrum)
                 {
                     if (gameObj.getBoundingSphere().Intersects(player2.getBoundingSphere()))
                     {
-                        player2.revertPosition();
+                        //player2.revertPosition();
                     }
                 }
+            }
+        }
+
+        // Checks the scores of both players
+        public void checkScores()
+        {
+            int totalScore = player1.Score + player2.Score;
+
+            if (totalScore >= 50)
+            {
+                // Do somthing here
             }
         }
 
