@@ -19,20 +19,21 @@ namespace Gameception
     {
         #region Attributes
 
+        GraphicsDeviceManager graphics;
+        GraphicsDevice device;
+        Effect effect;
+
+        Texture2D groundTexture;
+        VertexBuffer groundVertexBuffer;
+        int groundWidth = 10;
+        int groundLength = 10;
+
         ContentManager content;
         SpriteFont gameFont;
-        CollisionManager collisionManager;
 
         Camera camera;
         Player player1;
         Player player2;
-
-        Creep baddie;
-        List<Creep> minions;
-        ammoSupply ammo;
-        List<ammoSupply> ammoDrops;
-        GroundObject ground;
-        Model model;
 
         float pauseAlpha;
 
@@ -46,64 +47,33 @@ namespace Gameception
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
 
-        // Needs to move
-        PushPullObject tempObstacle;
-
         public override void LoadContent()
         {
-            minions = new List<Creep>();
-            ammoDrops = new List<ammoSupply>();
-
             camera = new Camera(this.ScreenManager.Game.Graphics);
+            graphics = ScreenManager.Game.Graphics;
+            device = graphics.GraphicsDevice;
 
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
+            effect = content.Load<Effect>("Ground/effects");
+            groundTexture = content.Load<Texture2D>("Ground/groundtexture");
+            SetUpVertices();
+
             gameFont = content.Load<SpriteFont>("Fonts/gamefont");
 
-            model = content.Load<Model>("Models/Ground");
-
-            ground = new GroundObject(ScreenManager.GraphicsDevice, camera);
-            ground.GroundModel = content.Load<Model>("Models/Ground");
-            ground.GroundTexture = content.Load<Texture2D>("Backgrounds/background_0");
-            // = new GameObject(content.Load<Model>("Models/crash_level"), 0, 0, Vector3.Zero, 6f, camera);
-            
-            // player set up should move
-            // also, perhaps two separate player objects for Player1 and NPC, inheriting from class Player,
-            // to allow for weapon specialization
-            player1 = new Player(content.Load<Model>("Models/player1"), 0.1f, 100, new Vector3(5, 3.5f, 0), 3.5f, camera, PlayerIndex.One);
+            player1 = new Player(content.Load<Model>("Models/player1"), 1f, 100, new Vector3(5, 3.5f, 0), 3.5f, camera, PlayerIndex.One);
             player1.setKeys(Keys.W, Keys.D, Keys.S, Keys.A, Keys.Space, PlayerIndex.One);
             Weapon player1Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"), player1);
             player1.PlayerWeapon = player1Weapon;
 
-            player2 = new Player(content.Load<Model>("Models/npcModel"), 0.1f, 100, new Vector3(-5, 4f, 0), 0.6f, camera, PlayerIndex.Two);
+            player2 = new Player(content.Load<Model>("Models/npcModel"), 1f, 100, new Vector3(-5, 4f, 0), 0.6f, camera, PlayerIndex.Two);
             player2.setKeys(Keys.Up, Keys.Right, Keys.Down, Keys.Left, Keys.NumPad0, PlayerIndex.Two);
             Weapon player2Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"), player2);
             player2.PlayerWeapon = player2Weapon;
 
             player1.setSoundManager(ScreenManager.SoundManager);
             player2.setSoundManager(ScreenManager.SoundManager);
-
-            
-
-            Random r = new Random();
-            for (int i = 0; i < 2; i++)
-            {
-                int randomX = r.Next(-60, 60);
-                int randomZ = r.Next(-60, 60);
-
-                baddie = new minion(content.Load<Model>("Models/dude"), 0.1f, 100, new Vector3(randomX, 0.8f, randomZ), 0.1f, camera);
-                minions.Add(baddie);
-            }
-
-            tempObstacle = new PushPullObject(content.Load<Model>("Models/Cylinder"), 0.4f, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
-
-            // add objects to collisionManager
-            collisionManager = new CollisionManager(this, 100, 100, 50);
-
-            collisionManager.AddObject(player1);
-            collisionManager.AddObject(player2);
-            collisionManager.AddObject(tempObstacle);
 
             // reset game time after loading all assets
             ScreenManager.Game.ResetElapsedTime();
@@ -115,6 +85,29 @@ namespace Gameception
         public override void UnloadContent()
         {
             content.Unload();
+        }
+
+        private void SetUpVertices()
+        {
+            List<VertexPositionNormalTexture> verticesList = new List<VertexPositionNormalTexture>();
+            int i = 25; // set size of vertex increments
+            for (int x = 0; x < groundWidth; x++)
+            {
+                for (int z = 0; z < groundLength; z++)
+                {
+                    verticesList.Add(new VertexPositionNormalTexture(new Vector3(x * i, 0, (-z) * i), new Vector3(0, 1, 0), new Vector2(0, 1)));
+                    verticesList.Add(new VertexPositionNormalTexture(new Vector3(x * i, 0, (-z - 1) * i), new Vector3(0, 1, 0), new Vector2(0, 0)));
+                    verticesList.Add(new VertexPositionNormalTexture(new Vector3((x + 1) * i, 0, (-z) * i), new Vector3(0, 1, 0), new Vector2(1.0f, 1)));
+
+                    verticesList.Add(new VertexPositionNormalTexture(new Vector3(x * i, 0, (-z - 1) * i), new Vector3(0, 1, 0), new Vector2(0, 0)));
+                    verticesList.Add(new VertexPositionNormalTexture(new Vector3((x + 1) * i, 0, (-z - 1) * i), new Vector3(0, 1, 0), new Vector2(1.0f, 0)));
+                    verticesList.Add(new VertexPositionNormalTexture(new Vector3((x + 1) * i, 0, (-z) * i), new Vector3(0, 1, 0), new Vector2(1.0f, 1)));
+                }
+            }
+
+            groundVertexBuffer = new VertexBuffer(device, VertexPositionNormalTexture.VertexDeclaration, verticesList.Count, BufferUsage.WriteOnly);
+
+            groundVertexBuffer.SetData<VertexPositionNormalTexture>(verticesList.ToArray());
         }
 
         #endregion
@@ -140,76 +133,8 @@ namespace Gameception
                 player1.Update();
                 player2.Update();
 
-                tempObstacle.Update();
-
-                collisionManager.Update();
                 camera.Update(player1, player2);
 
-            }
-
-
-            for (int i = 0; i < ammoDrops.Count; i++ )
-            {
-                if (ammoDrops.ElementAt(i).isPickedUp())
-                    ammoDrops.RemoveAt(i);
-            }
-
-            for (int i = 0; i < minions.Count;i++ )
-            {
-                Creep c = minions.ElementAt(i); 
-
-                c.beEvil(player1, player2);
-              
-                //remove dead creep
-                if (((minion)c).isDeadCheck())
-                {
-                    //check if it should drop ammo
-                    if (((minion)c)._dropAmmo())
-                    {
-                        ammo = new ammoSupply(content.Load<Model>("Models/SphereHighPoly"), 0, 0, 1, camera, 20);
-                        ammo.setPosition(c);
-                        ammoDrops.Add(ammo);
-                    }
-
-                    minions.Remove(c);
-                }
-            }
-
-            checkCollisions();
-        }
-
-        // Temp collision detection
-        public void checkCollisions()
-        {
-            // This is not working correctly yet
-            foreach (Projectile p in player2.PlayerWeapon.AllProjectiles)
-            {
-                if (p.getBoundingSphere().Intersects(tempObstacle.getBoundingSphere()))
-                {
-                    p.Active = false;
-                    //tempObstacle.Position = player2.Position;
-                    tempObstacle.pull(player2.Position, player2);
-                }
-            }
-
-            foreach (Projectile p in player1.PlayerWeapon.AllProjectiles)
-            {
-                foreach(Creep c in minions)
-                {
-                    if (p.getBoundingSphere().Intersects(c.getBoundingSphere()))
-                    {
-                        c.takeDamage(p);   
-                    }
-                }
-            }
-
-            foreach (ammoSupply a in ammoDrops)
-            {
-                if (a.getBoundingSphere().Intersects(player1.getBoundingSphere()))
-                {
-                    player1.Ammo += a.AmmoAmount;
-                    a.pickedUp();
-                }
             }
         }
 
@@ -259,7 +184,7 @@ namespace Gameception
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
+            ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
 
             // Ensures that models are drawn at correct depth
             DepthStencilState depth = new DepthStencilState();
@@ -267,22 +192,9 @@ namespace Gameception
 
             ScreenManager.GraphicsDevice.DepthStencilState = depth;
 
-            ground.Draw();
+            DrawGround();
             player1.Draw();
             player2.Draw();
-
-            tempObstacle.Draw();
-
-            foreach (Creep c in minions)
-                c.Draw();
-            foreach (ammoSupply a in ammoDrops)
-                a.Draw();
-
-            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-            spriteBatch.Begin();
-
-            spriteBatch.DrawString(gameFont, ""+collision, Vector2.Zero, Color.White);
-            spriteBatch.End();
     
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0 || pauseAlpha > 0)
@@ -293,13 +205,21 @@ namespace Gameception
             }
         }
 
-        bool collision = false;
-
-        public void displayCollisions(bool value)
+        private void DrawGround()
         {
-            collision = value;
-        }
+            effect.CurrentTechnique = effect.Techniques["Textured"];
+            effect.Parameters["xWorld"].SetValue(Matrix.Identity);
+            effect.Parameters["xView"].SetValue(camera.View);//(viewMatrix);
+            effect.Parameters["xProjection"].SetValue(camera.Projection);//(projectionMatrix);
+            effect.Parameters["xTexture"].SetValue(groundTexture);
 
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                device.SetVertexBuffer(groundVertexBuffer);
+                device.DrawPrimitives(PrimitiveType.TriangleList, 0, groundVertexBuffer.VertexCount / 3);
+            }
+        }
 
         #endregion
     }

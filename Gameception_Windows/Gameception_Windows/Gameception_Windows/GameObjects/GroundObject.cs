@@ -56,13 +56,12 @@ namespace Gameception
         #endregion
 
         #region Fields
-        public const int worldWidth = 20;
-        public const int worldHeight = 20;
-        public const int numCellsWide = 10;
-        public const int numCellsHigh = 10;
-        public const int cellXsize = 2;
-        public const int cellZsize = 2;
-        
+        public const int worldWidth = 200;
+        public const int worldHeight = 200;
+        public const int numCellsWide = 100;
+        public const int numCellsHigh = 100;
+        int cellXsize = worldWidth / numCellsWide;
+        int cellZsize = worldHeight / numCellsHigh;
         
         int numVerticesWide;
         int numVerticesHigh;
@@ -146,14 +145,16 @@ namespace Gameception
 
         #region Draw
 
-        public void Draw()
+        public void Draw(GraphicsDevice g)
         {
+            g.SamplerStates[0] = SamplerState.LinearWrap;
+
             effect.World = Matrix.Identity;
             effect.View = GameCamera.View;
             effect.Projection = GameCamera.Projection;
             effect.TextureEnabled = true;
             effect.Texture = GroundTexture;
-
+            
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -161,7 +162,6 @@ namespace Gameception
                 device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices,
                     0, vertices.Length, indices, 0, indices.Length / 3);
             }
-
         }
 
         #endregion

@@ -59,7 +59,7 @@ namespace Gameception
 
         public Camera(GraphicsDeviceManager graphics)
         {
-            Position = new Vector3(0, 20, -20);
+            Position = new Vector3(0, 2, -2);
             LookAt = Vector3.Zero;
             UpVector = Vector3.UnitY;
 

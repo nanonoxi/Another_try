@@ -223,7 +223,7 @@ namespace Gameception
 
         public void CheckCollisions(GameObject o)
         {
-            Game.displayCollisions(false); // reset
+            //Game.displayCollisions(false); // reset
             // get object bounds
             BoundingSphere sphere = o.getBoundingSphere();
             Vector3 center = o.Position;
@@ -284,7 +284,7 @@ namespace Gameception
 
         private void processCollision(GameObject o1, GameObject o2)
         {
-            Game.displayCollisions(true);
+            //Game.displayCollisions(true);
             /*if (o1.GetType().Name.Equals(""))
             {
             }
