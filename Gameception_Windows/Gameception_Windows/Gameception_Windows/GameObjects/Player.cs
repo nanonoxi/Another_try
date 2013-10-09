@@ -145,9 +145,11 @@ namespace Gameception
                     PlayerFacing = Position - PreviousPosition;
                 }
 
+                //rotationAngle = (float)(Math.Atan2(gamepad.ThumbSticks.Left.Y, gamepad.ThumbSticks.Left.X));
+                rotationAngle = Vector3.Dot(new Vector3(0, 0, 1), PlayerFacing);
                 PreviousPosition = Position;
 
-                if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
+                /*if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
                 {
                     //Position = Position + Vector3.UnitZ * MovementSpeed;
                     //rotationAngle = 0f;
@@ -162,7 +164,7 @@ namespace Gameception
                 {
                     Position = Position + Vector3.UnitZ * (-MovementSpeed);
                     rotationAngle = 180f;
-                }*/
+                }//
 
                 if (keyboard.IsKeyDown(Right) || (gamepad.ThumbSticks.Left.X > 0))
                 {
@@ -175,7 +177,9 @@ namespace Gameception
                     //Position = Position + Vector3.UnitX * MovementSpeed;
                     //rotationAngle = 90f;
                     rotationAngle += 2f;
-                }
+                }*/
+
+                Position = new Vector3(Position.X - (gamepad.ThumbSticks.Left.X * MovementSpeed), Position.Y, Position.Z + (gamepad.ThumbSticks.Left.Y * MovementSpeed));
             }
 
             // This needs to be outside the if so that the release of the button can be detected
