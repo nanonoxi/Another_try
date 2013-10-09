@@ -136,19 +136,24 @@ namespace Gameception
         public void HandleInput()
         {
             KeyboardState keyboard = Keyboard.GetState();
-            GamePadState gamepad = GamePad.GetState(playerIndex);
+            GamePadState gamepad = GamePad.GetState(playerIndex, GamePadDeadZone.Circular);
 
             if (CanMove == true)
             {
                 if (Position != PreviousPosition)
                 {
                     PlayerFacing = Position - PreviousPosition;
-                    rotationAngle = (float)(Math.Atan2(-gamepad.ThumbSticks.Left.X, gamepad.ThumbSticks.Left.Y));
-                    //Console.WriteLine(rotationAngle);
                 }
 
-                //rotationAngle = Vector3.Dot(new Vector3(0, 0, 1), PlayerFacing);
                 PreviousPosition = Position;
+
+                float gamePadX = gamepad.ThumbSticks.Left.X;
+                float gamePadY = gamepad.ThumbSticks.Left.Y;
+
+                if ((gamePadX != 0) || (gamePadY != 0))
+                {
+                    rotationAngle = (float)(Math.Atan2(-gamePadX, gamePadY));
+                }
 
                 /*if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
                 {
@@ -190,13 +195,11 @@ namespace Gameception
                 {
                     if (ammo > 0)
                     {
-                        Matrix forward = Matrix.CreateRotationY(MathHelper.ToRadians(rotationAngle));
+                        Matrix forward = Matrix.CreateRotationY(rotationAngle);
                         Vector3 shootingDirection = new Vector3(0, 0, MovementSpeed);
                         shootingDirection = Vector3.Transform(shootingDirection, forward);
 
-                        Vector3 shotVector = new Vector3(Position.X + shootingDirection.X, Position.Y, Position.Z + shootingDirection.Z);
-
-                        PlayerWeapon.fire(GameCamera, Position, shotVector);
+                        PlayerWeapon.fire(GameCamera, Position, shootingDirection);
                     }
                     else
                     {
@@ -205,12 +208,11 @@ namespace Gameception
                 }
                 else if (playerIndex == PlayerIndex.Two && ObjectHeld == false) // Player 2 can't move while pulling an object
                 {
-                    Matrix forward = Matrix.CreateRotationY(MathHelper.ToRadians(rotationAngle));
-                    Vector3 shootingDirection = new Vector3(0, 0, PlayerFacing.Z);
+                    Matrix forward = Matrix.CreateRotationY(rotationAngle);
+                    Vector3 shootingDirection = new Vector3(0, 0, MovementSpeed);
                     shootingDirection = Vector3.Transform(shootingDirection, forward);
 
                     PlayerWeapon.fire(GameCamera, Position, shootingDirection);
-                    soundManager.play("pew");
                     CanMove = false;
                 }
             }
@@ -235,7 +237,7 @@ namespace Gameception
             Matrix[] transforms = new Matrix[ObjectModel.Bones.Count];
             ObjectModel.CopyAbsoluteBoneTransformsTo(transforms);
 
-            Matrix rotation = Matrix.CreateRotationY(/*MathHelper.ToRadians*/(rotationAngle));
+            Matrix rotation = Matrix.CreateRotationY(rotationAngle);
 
             // Only draw a gameObject if it's active
             if (Active)
