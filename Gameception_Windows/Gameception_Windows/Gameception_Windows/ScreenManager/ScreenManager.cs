@@ -156,7 +156,7 @@ namespace Gameception
             SoundManager.add(content.Load<SoundEffect>("Sounds/marioBrosbump"), "bump");
             SoundManager.add(content.Load<SoundEffect>("Sounds/marioBrosPause"), "pause");
             SoundManager.add(content.Load<SoundEffect>("Sounds/yoshi"), "end");
-            SoundManager.add(content.Load<SoundEffect>("Sounds/credits"), "gameOver");
+            SoundManager.add(content.Load<SoundEffect>("Sounds/marioBrosPause"), "gameOver");
             SoundManager.add(content.Load<SoundEffect>("Sounds/pew"), "pew");
 
             

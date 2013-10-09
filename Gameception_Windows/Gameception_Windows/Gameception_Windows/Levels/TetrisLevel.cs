@@ -350,8 +350,8 @@ namespace Gameception
 
             hud.Draw(gameTime);
 
-            BoundingSphereRenderer.Render(player2.getBoundingSphere(), ScreenManager.GraphicsDevice, camera.View, camera.Projection, Color.Green);
-            BoundingSphereRenderer.Render(player1.getBoundingSphere(), ScreenManager.GraphicsDevice, camera.View, camera.Projection, Color.Red);
+            //BoundingSphereRenderer.Render(player2.getBoundingSphere(), ScreenManager.GraphicsDevice, camera.View, camera.Projection, Color.Green);
+            //BoundingSphereRenderer.Render(player1.getBoundingSphere(), ScreenManager.GraphicsDevice, camera.View, camera.Projection, Color.Red);
 
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0 || pauseAlpha > 0)
