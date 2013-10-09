@@ -328,13 +328,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sounds\credits.wav">
-      <Name>credits</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Sounds\16-%24o%24.mp3">
       <Name>16-%24o%24</Name>
       <Importer>Mp3Importer</Importer>
