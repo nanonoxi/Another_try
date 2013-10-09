@@ -54,16 +54,9 @@ namespace Gameception
             if (input == null)
                 throw new ArgumentNullException("input");
 
-            int playerIndex;
-            if (ControllingPlayer.HasValue)
-                playerIndex = (int)ControllingPlayer.Value;
-            else
-                playerIndex = 1;
+            PlayerIndex playerIndex;
 
-            KeyboardState keyboardState = input.CurrentKeyboardStates[playerIndex];
-            GamePadState gamePadState = input.CurrentGamePadStates[playerIndex];
-
-            if (keyboardState.GetPressedKeys().Length > 0) // if any key is pressed
+            if (input.IsMenuSelect(ControllingPlayer, out playerIndex))
             {
                 const string message = "Do you want to return to the main menu?";
                 MessageBoxScreen confirmQuitMessageBox = new MessageBoxScreen(message);
