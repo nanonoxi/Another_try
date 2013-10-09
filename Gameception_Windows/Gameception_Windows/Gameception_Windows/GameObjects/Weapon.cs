@@ -91,6 +91,7 @@ namespace Gameception
             if (elapsedFrames >= CooldownTime)
             {
                 // Create projectile
+                startPosition.Y += 1.5f;
                 allProjectiles.Add(new Projectile(ProjectileModel, ProjectileSpeed, 0, 10f, startPosition, 0.1f, gameCamera, shotDirection));
 
                 // Play sound here
@@ -104,10 +105,21 @@ namespace Gameception
         public void Update()
         {
             elapsedFrames++;
-            Collection<Projectile> inActive = new Collection<Projectile>(); 
+            Collection<Projectile> inActive = new Collection<Projectile>();
 
+            for (int i = 0; i < allProjectiles.Count; i++)
+            {
+                if (allProjectiles[i].Active)
+                {
+                    allProjectiles[i].Update();
+                }
+                else
+                {
+                    allProjectiles.RemoveAt(i);
+                }
+            }
 
-            foreach (Projectile proj in allProjectiles)
+            /*foreach (Projectile proj in allProjectiles)
             {
                 if (proj.Active)
                 {
@@ -123,7 +135,7 @@ namespace Gameception
             foreach (Projectile p in inActive)
             {
                 allProjectiles.Remove(p);
-            }
+            }*/
         }
 
         // Draw the projectiles created by this weapon
