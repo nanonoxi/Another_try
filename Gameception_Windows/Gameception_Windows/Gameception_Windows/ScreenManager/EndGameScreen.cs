@@ -29,8 +29,8 @@ namespace Gameception
         {
             thisScreensMusic = "sos";
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5); 
-		}
+            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+        }
 
         public void setSoundManager(SoundManager s)
         {
@@ -54,16 +54,9 @@ namespace Gameception
             if (input == null)
                 throw new ArgumentNullException("input");
 
-            int playerIndex;
-            if (ControllingPlayer.HasValue)
-                playerIndex = (int)ControllingPlayer.Value;
-            else
-                playerIndex = 1;
+            PlayerIndex playerIndex;
 
-            KeyboardState keyboardState = input.CurrentKeyboardStates[playerIndex];
-            GamePadState gamePadState = input.CurrentGamePadStates[playerIndex];
-
-            if (keyboardState.GetPressedKeys().Length > 0) // if any key is pressed
+            if (input.IsMenuSelect(ControllingPlayer, out playerIndex))
             {
                 const string message = "Do you want to return to the main menu?";
                 MessageBoxScreen confirmQuitMessageBox = new MessageBoxScreen(message);
@@ -100,16 +93,16 @@ namespace Gameception
         }
 
         #endregion
-        
+
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
                                               bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
             ScreenManager.SoundManager.play(thisScreensMusic);
         }
-        
 
-		
+
+
         #region Draw
 
         /// <summary>

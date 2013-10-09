@@ -143,10 +143,11 @@ namespace Gameception
                 if (Position != PreviousPosition)
                 {
                     PlayerFacing = Position - PreviousPosition;
+                    rotationAngle = (float)(Math.Atan2(-gamepad.ThumbSticks.Left.X, gamepad.ThumbSticks.Left.Y));
+                    //Console.WriteLine(rotationAngle);
                 }
 
-                //rotationAngle = (float)(Math.Atan2(gamepad.ThumbSticks.Left.Y, gamepad.ThumbSticks.Left.X));
-                rotationAngle = Vector3.Dot(new Vector3(0, 0, 1), PlayerFacing);
+                //rotationAngle = Vector3.Dot(new Vector3(0, 0, 1), PlayerFacing);
                 PreviousPosition = Position;
 
                 /*if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
@@ -234,7 +235,7 @@ namespace Gameception
             Matrix[] transforms = new Matrix[ObjectModel.Bones.Count];
             ObjectModel.CopyAbsoluteBoneTransformsTo(transforms);
 
-            Matrix rotation = Matrix.CreateRotationY(MathHelper.ToRadians(rotationAngle));
+            Matrix rotation = Matrix.CreateRotationY(/*MathHelper.ToRadians*/(rotationAngle));
 
             // Only draw a gameObject if it's active
             if (Active)
