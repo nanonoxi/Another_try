@@ -16,7 +16,7 @@ namespace Gameception
         SoundManager soundManager;
 
         // player control keys
-        Keys Up, Right, Down, Left, Fire;
+        public Keys Up, Right, Down, Left, Fire;
 
         // The direction the player is facing, used for firing weapons
         Vector3 playerFacing;
@@ -35,6 +35,9 @@ namespace Gameception
 
         // The ammount of ammunition the player has
         private int ammo;
+
+        // The score of this player
+        private int score;
 
         #endregion
 
@@ -64,11 +67,16 @@ namespace Gameception
             set { playerWeapon = value; }
         }
 
-
         public int Ammo
         {
             get { return ammo; }
             set { ammo = value; }
+        }
+
+        public int Score
+        {
+            get { return score; }
+            set { score = value; }
         }
         #endregion
 
@@ -128,7 +136,7 @@ namespace Gameception
         public void HandleInput()
         {
             KeyboardState keyboard = Keyboard.GetState();
-            GamePadState gamepad = GamePad.GetState(playerIndex);
+            GamePadState gamepad = GamePad.GetState(playerIndex, GamePadDeadZone.Circular);
 
             if (CanMove == true)
             {
@@ -139,27 +147,45 @@ namespace Gameception
 
                 PreviousPosition = Position;
 
-                if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
+                float gamePadX = gamepad.ThumbSticks.Left.X;
+                float gamePadY = gamepad.ThumbSticks.Left.Y;
+
+                if ((gamePadX != 0) || (gamePadY != 0))
                 {
-                    Position = Position + Vector3.UnitZ * MovementSpeed;
-                    rotationAngle = 0f;
+                    rotationAngle = (float)(Math.Atan2(-gamePadX, gamePadY));
                 }
-                else if (keyboard.IsKeyDown(Down) || (gamepad.ThumbSticks.Left.Y < 0))
+
+                /*if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
+                {
+                    //Position = Position + Vector3.UnitZ * MovementSpeed;
+                    //rotationAngle = 0f;
+
+                    Matrix moveForward = Matrix.CreateRotationY(MathHelper.ToRadians(rotationAngle));
+                    Vector3 velocityVector = new Vector3(0, 0, MovementSpeed);
+                    velocityVector = Vector3.Transform(velocityVector, moveForward);
+                    Vector3 tempPosition = new Vector3(Position.X + velocityVector.X, Position.Y, Position.Z + velocityVector.Z);
+                    Position = tempPosition;
+                }
+                /*else if (keyboard.IsKeyDown(Down) || (gamepad.ThumbSticks.Left.Y < 0))
                 {
                     Position = Position + Vector3.UnitZ * (-MovementSpeed);
                     rotationAngle = 180f;
-                }
+                }//
 
                 if (keyboard.IsKeyDown(Right) || (gamepad.ThumbSticks.Left.X > 0))
                 {
-                    Position = Position + Vector3.UnitX * (-MovementSpeed);
-                    rotationAngle = 270f;
+                    //Position = Position + Vector3.UnitX * (-MovementSpeed);
+                    //rotationAngle = 270f;
+                    rotationAngle -= 2f;
                 }
                 else if (keyboard.IsKeyDown(Left) || (gamepad.ThumbSticks.Left.X < 0))
                 {
-                    Position = Position + Vector3.UnitX * MovementSpeed;
-                    rotationAngle = 90f;
-                }
+                    //Position = Position + Vector3.UnitX * MovementSpeed;
+                    //rotationAngle = 90f;
+                    rotationAngle += 2f;
+                }*/
+
+                Position = new Vector3(Position.X - (gamepad.ThumbSticks.Left.X * MovementSpeed), Position.Y, Position.Z + (gamepad.ThumbSticks.Left.Y * MovementSpeed));
             }
 
             // This needs to be outside the if so that the release of the button can be detected
@@ -169,7 +195,11 @@ namespace Gameception
                 {
                     if (ammo > 0)
                     {
-                        PlayerWeapon.fire(GameCamera, Position, PlayerFacing);
+                        Matrix forward = Matrix.CreateRotationY(rotationAngle);
+                        Vector3 shootingDirection = new Vector3(0, 0, MovementSpeed);
+                        shootingDirection = Vector3.Transform(shootingDirection, forward);
+
+                        PlayerWeapon.fire(GameCamera, Position, shootingDirection);
                     }
                     else
                     {
@@ -178,8 +208,11 @@ namespace Gameception
                 }
                 else if (playerIndex == PlayerIndex.Two && ObjectHeld == false) // Player 2 can't move while pulling an object
                 {
-                    PlayerWeapon.fire(GameCamera, Position, PlayerFacing);
-                    soundManager.play("pew");
+                    Matrix forward = Matrix.CreateRotationY(rotationAngle);
+                    Vector3 shootingDirection = new Vector3(0, 0, MovementSpeed);
+                    shootingDirection = Vector3.Transform(shootingDirection, forward);
+
+                    PlayerWeapon.fire(GameCamera, Position, shootingDirection);
                     CanMove = false;
                 }
             }
@@ -204,23 +237,26 @@ namespace Gameception
             Matrix[] transforms = new Matrix[ObjectModel.Bones.Count];
             ObjectModel.CopyAbsoluteBoneTransformsTo(transforms);
 
-            Matrix rotation = Matrix.CreateRotationY(MathHelper.ToRadians(rotationAngle));
+            Matrix rotation = Matrix.CreateRotationY(rotationAngle);
 
             // Only draw a gameObject if it's active
             if (Active)
             {
-                foreach (ModelMesh mesh in ObjectModel.Meshes)
+                if (InFrustrum)
                 {
-                    foreach (BasicEffect effect in mesh.Effects)
+                    foreach (ModelMesh mesh in ObjectModel.Meshes)
                     {
-                        effect.EnableDefaultLighting();
+                        foreach (BasicEffect effect in mesh.Effects)
+                        {
+                            effect.EnableDefaultLighting();
 
-                        effect.View = GameCamera.View;
-                        effect.Projection = GameCamera.Projection;
-                        effect.World = rotation * transforms[mesh.ParentBone.Index] * Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
+                            effect.View = GameCamera.View;
+                            effect.Projection = GameCamera.Projection;
+                            effect.World = rotation * transforms[mesh.ParentBone.Index] * Matrix.CreateScale(ScaleFactor) * Matrix.CreateTranslation(Position);
+                        }
+
+                        mesh.Draw();
                     }
-
-                    mesh.Draw();
                 }
             }
 

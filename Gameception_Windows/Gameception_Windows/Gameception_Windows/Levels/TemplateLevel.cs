@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Content;
@@ -32,7 +33,12 @@ namespace Gameception
         List<ammoSupply> ammoDrops;
         GameObject ground;
 
+        Collection<PushPullObject> apples;
+
         float pauseAlpha;
+
+        // Controls drawing of the heads-up display
+        HUD hud;
 
         #endregion
 
@@ -44,13 +50,11 @@ namespace Gameception
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
 
-        // Needs to move
-        PushPullObject tempObstacle;
-
         public override void LoadContent()
         {
             minions = new List<Creep>();
             ammoDrops = new List<ammoSupply>();
+            apples = new Collection<PushPullObject>();
 
             camera = new Camera(this.ScreenManager.Game.Graphics);
 
@@ -70,13 +74,12 @@ namespace Gameception
 
             player2 = new Player(content.Load<Model>("Models/npcModel"), 0.1f, 100, new Vector3(-5, 4f, 0), 0.6f, camera, PlayerIndex.Two);
             player2.setKeys(Keys.Up, Keys.Right, Keys.Down, Keys.Left, Keys.NumPad0, PlayerIndex.Two);
-            Weapon player2Weapon = new Weapon(20f, content.Load<Model>("Models/sphereHighPoly"), player2);
+            Weapon player2Weapon = new Weapon(30f, content.Load<Model>("Models/sphereHighPoly"), player2);
+            player2Weapon.ProjectileSpeed = 3f;
             player2.PlayerWeapon = player2Weapon;
 
             player1.setSoundManager(ScreenManager.SoundManager);
             player2.setSoundManager(ScreenManager.SoundManager);
-
-            
 
             Random r = new Random();
             for (int i = 0; i < 2; i++)
@@ -88,7 +91,17 @@ namespace Gameception
                 minions.Add(baddie);
             }
 
-            tempObstacle = new PushPullObject(content.Load<Model>("Models/Cylinder"), 0.4f, 100, new Vector3(0, 4f, 15), 0.5f, camera, 10);
+            Model wumpaFruit = content.Load<Model>("Models/wumpa_fruit_model");
+
+            // Create the apples to be placed in the world
+            for (int a = 0; a < 10; a++)
+            {
+                PushPullObject temp = new PushPullObject(wumpaFruit, 0.1f, 100, new Vector3(0, 4f, 15 + (a * 10)), 0.5f, camera, 10);
+                apples.Add(temp);
+            }
+
+            // HUD has to be initialised here so that it can have access to the initialised player objects
+            hud = new HUD(this.ScreenManager, player1, player2);
 
             // reset game time after loading all assets
             ScreenManager.Game.ResetElapsedTime();
@@ -108,7 +121,6 @@ namespace Gameception
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            
             base.Update(gameTime, otherScreenHasFocus, false);
 
             ScreenManager.SoundManager.play("title3");
@@ -124,8 +136,6 @@ namespace Gameception
             {
                 player1.Update();
                 player2.Update();
-
-                tempObstacle.Update();
                 
                 camera.Update(player1, player2);
             }
@@ -158,20 +168,37 @@ namespace Gameception
                 }
             }
 
+            foreach (PushPullObject apple in apples)
+            {
+                apple.Update();
+            }
+
             checkCollisions();
         }
 
         // Temp collision detection
         public void checkCollisions()
         {
-            // This is not working correctly yet
+            bool objectPulled = false;
+
             foreach (Projectile p in player2.PlayerWeapon.AllProjectiles)
             {
-                if (p.getBoundingShpere().Intersects(tempObstacle.getBoundingShpere()))
+                if (objectPulled == false)
+                {
+                    foreach (PushPullObject apple in apples)
+                    {
+                        if (p.getBoundingSphere().Intersects(apple.getBoundingSphere()))
+                        {
+                            p.Active = false;
+                            apple.pull(player2.Position, player2);
+                            objectPulled = true;
+                            break;
+                        }
+                    }
+                }
+                else
                 {
                     p.Active = false;
-                    //tempObstacle.Position = player2.Position;
-                    tempObstacle.pull(player2.Position, player2);
                 }
             }
 
@@ -179,19 +206,44 @@ namespace Gameception
             {
                 foreach(Creep c in minions)
                 {
-                    if (p.getBoundingShpere().Intersects(c.getBoundingShpere()))
+                    if (p.getBoundingSphere().Intersects(c.getBoundingSphere()))
                     {
-                        c.takeDamage(p);   
+                        p.Active = false;
+                        c.takeDamage(p);
+                    }
+                }
+
+                if (p.Active == true)
+                {
+                    if (p.getBoundingSphere().Intersects(player2.getBoundingSphere()))
+                    {
+                        // Player 2 gain health if shot by player 1
+                        p.Active = false;
+                        player2.adjustHealth(10);
                     }
                 }
             }
 
             foreach (ammoSupply a in ammoDrops)
             {
-                if (a.getBoundingShpere().Intersects(player1.getBoundingShpere()))
+                if (a.getBoundingSphere().Intersects(player1.getBoundingSphere()))
                 {
                     player1.Ammo += a.AmmoAmount;
                     a.pickedUp();
+                }
+            }
+
+            foreach (Creep creep in minions)
+            {
+                BoundingSphere creepSphere = creep.getBoundingSphere();
+
+                if (creepSphere.Intersects(player1.getBoundingSphere()))
+                {
+                    player1.adjustHealth(-10);
+                }
+                else if (creepSphere.Intersects(player2.getBoundingSphere()))
+                {
+                    player2.adjustHealth(-10);
                 }
             }
         }
@@ -247,6 +299,7 @@ namespace Gameception
             // Ensures that models are drawn at correct depth
             DepthStencilState depth = new DepthStencilState();
             depth.DepthBufferEnable = true;
+            depth.DepthBufferWriteEnable = true;
 
             ScreenManager.GraphicsDevice.DepthStencilState = depth;
 
@@ -254,12 +307,26 @@ namespace Gameception
             player1.Draw();
             player2.Draw();
 
-            tempObstacle.Draw();
-
             foreach (Creep c in minions)
                 c.Draw();
             foreach (ammoSupply a in ammoDrops)
                 a.Draw();
+
+            foreach (PushPullObject apple in apples)
+            {
+                apple.Draw();
+            }
+
+            /*DepthStencilState depth2 = new DepthStencilState();
+            depth2.DepthBufferEnable = true;
+            depth2.DepthBufferWriteEnable = false;
+
+            ScreenManager.GraphicsDevice.DepthStencilState = depth2;
+
+            tempObstacle.Draw();*/
+
+            // Draw the temp HUD
+            hud.Draw(gameTime);
 
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0 || pauseAlpha > 0)

@@ -24,6 +24,9 @@ namespace Gameception
         // Used to determine whether or not a weapon can be fired
         private int elapsedFrames;
 
+        // The speed of a single projectile
+        private float projectileSpeed;
+
         // All the projectiles created by this weapon
         Collection<Projectile> allProjectiles;
 
@@ -55,6 +58,12 @@ namespace Gameception
             set { projectileModel = value; }
         }
 
+        public float ProjectileSpeed
+        {
+            get { return projectileSpeed; }
+            set { projectileSpeed = value; }
+        }
+
         public Collection<Projectile> AllProjectiles
         {
             get { return allProjectiles; }
@@ -70,6 +79,8 @@ namespace Gameception
 
             Owner = obj;
 
+            ProjectileSpeed = 1.5f;
+
             ProjectileModel = modelOfProjectile;
             allProjectiles = new Collection<Projectile>();
         }
@@ -80,7 +91,8 @@ namespace Gameception
             if (elapsedFrames >= CooldownTime)
             {
                 // Create projectile
-                allProjectiles.Add(new Projectile(ProjectileModel, 1.5f, 0, 10f, startPosition, 0.1f, gameCamera, shotDirection));
+                startPosition.Y += 1.5f;
+                allProjectiles.Add(new Projectile(ProjectileModel, ProjectileSpeed, 0, 10f, startPosition, 0.1f, gameCamera, shotDirection));
 
                 // Play sound here
 
@@ -93,14 +105,37 @@ namespace Gameception
         public void Update()
         {
             elapsedFrames++;
+            Collection<Projectile> inActive = new Collection<Projectile>();
 
-            foreach (Projectile proj in allProjectiles)
+            for (int i = 0; i < allProjectiles.Count; i++)
+            {
+                if (allProjectiles[i].Active)
+                {
+                    allProjectiles[i].Update();
+                }
+                else
+                {
+                    allProjectiles.RemoveAt(i);
+                }
+            }
+
+            /*foreach (Projectile proj in allProjectiles)
             {
                 if (proj.Active)
                 {
                     proj.Update();
                 }
+                else
+                {
+                    inActive.Add(proj);
+                }
             }
+
+            // Remove in active projectiles from the game
+            foreach (Projectile p in inActive)
+            {
+                allProjectiles.Remove(p);
+            }*/
         }
 
         // Draw the projectiles created by this weapon

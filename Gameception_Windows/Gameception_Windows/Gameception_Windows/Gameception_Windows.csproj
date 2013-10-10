@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoundingSphereRenderer.cs" />
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="CollisionManager\CollisionManager.cs" />
     <Compile Include="Gameception.cs" />
@@ -118,7 +119,9 @@
     <Compile Include="GameObjects\Projectile.cs" />
     <Compile Include="GameObjects\PushPullObject.cs" />
     <Compile Include="GameObjects\Weapon.cs" />
+    <Compile Include="Helpers\HUD.cs" />
     <Compile Include="Levels\TemplateLevel.cs" />
+    <Compile Include="Levels\TetrisLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ScreenManager\BackgroundScreen.cs" />

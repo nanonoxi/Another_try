@@ -67,6 +67,12 @@ namespace Gameception
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), graphics.GraphicsDevice.Viewport.AspectRatio, 1.0f, 1000.0f);
         }
 
+        // Used to determine if a ceratin object is within view
+        public bool inView(BoundingSphere sphere)
+        {
+            return new BoundingFrustum(View * Projection).Intersects(sphere);
+        }
+
         // Update the components of the camera based on the position of the players
         public void Update(Player player1, Player player2)
         {
@@ -83,6 +89,8 @@ namespace Gameception
             {
                 //player1.Position = player1.PreviousPosition;
                 //player2.Position = player2.PreviousPosition;
+                player1.revertPosition();
+                player2.revertPosition();
             }
 
             distanceBetween = MathHelper.Clamp(distanceBetween, 20, 10000000);

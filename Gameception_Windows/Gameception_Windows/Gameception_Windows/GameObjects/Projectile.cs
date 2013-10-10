@@ -44,7 +44,7 @@ namespace Gameception
         }
 
         // Update the state of this projectile
-        public void Update()
+        public override void Update()
         {
             elapsedFrames++;
 
@@ -56,6 +56,8 @@ namespace Gameception
             {
                 this.Position = this.Position + MovementSpeed * direction;
             }
+
+            base.Update();
         }
 
         public float getDamage() 
