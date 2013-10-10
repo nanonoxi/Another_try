@@ -22,7 +22,7 @@ namespace Gameception
 
         static bool crawl = true;
 
-        static int[] soundVolume = { 0, 25, 50, 75, 100 };
+        static int[] soundVolume = { 50, 75, 100, 0, 25 };
         static int currentSoundVolume = 0;
 
         static string[] languages = { "C#", "French", "Deoxyribonucleic acid" };
@@ -43,7 +43,7 @@ namespace Gameception
             crawlMenuEntry = new MenuEntry(string.Empty);
             soundMenuEntry = new MenuEntry(string.Empty);
             languageMenuEntry = new MenuEntry(string.Empty);
-            
+
             SetMenuEntryText();
 
             MenuEntry back = new MenuEntry("Back");
@@ -93,7 +93,32 @@ namespace Gameception
         /// </summary>
         void SoundMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
+
             currentSoundVolume = (currentSoundVolume + 1) % soundVolume.Length;
+
+            float setVol = 0; ;
+            if (currentSoundVolume == 0)
+            {
+                setVol = .5f;
+            }
+            if (currentSoundVolume == 1)
+            {
+                setVol = .75f;
+            }
+            if (currentSoundVolume == 2)
+            {
+                setVol = 1f;
+            }
+            if (currentSoundVolume == 3)
+            {
+                setVol = 0f;
+            }
+            if (currentSoundVolume == 4)
+            {
+                setVol = .25f;
+            }
+
+            ScreenManager.SoundManager.setVolume(setVol);
 
             SetMenuEntryText();
         }

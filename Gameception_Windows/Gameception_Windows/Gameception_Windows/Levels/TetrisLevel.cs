@@ -40,7 +40,7 @@ namespace Gameception
         private Collection<GameObject> walls;
 
         // The collectible apples in the game
-        private Collection<GameObject> apples;
+        private Collection<PushPullObject> apples;
 
         // Draws the HUD for this level
         HUD hud;
@@ -113,7 +113,7 @@ namespace Gameception
         public void loadLevel()
         {
             walls = new Collection<GameObject>();
-            apples = new Collection<GameObject>();
+            apples = new Collection<PushPullObject>();
 
             Color [] map = new Color[64*64];
             Texture2D mapTexture = content.Load<Texture2D>("Levels/maze_map_apples");
@@ -150,7 +150,7 @@ namespace Gameception
                 else if (map[i] == Color.Red)
                 {
                     Vector3 objectPosition = new Vector3(x, 1.5f, z);
-                    GameObject temp = new GameObject(appleModel, 0, 0, objectPosition, 1.5f, camera);
+                    PushPullObject temp = new PushPullObject(appleModel, 0, 0, objectPosition, 1.5f, camera,10);
                     apples.Add(temp);
                 }
             }

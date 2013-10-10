@@ -155,37 +155,33 @@ namespace Gameception
                     rotationAngle = (float)(Math.Atan2(-gamePadX, gamePadY));
                 }
 
-                /*if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
+                #if WINDOWS
+                if (gamepad.IsConnected == false)
                 {
-                    //Position = Position + Vector3.UnitZ * MovementSpeed;
-                    //rotationAngle = 0f;
-
-                    Matrix moveForward = Matrix.CreateRotationY(MathHelper.ToRadians(rotationAngle));
-                    Vector3 velocityVector = new Vector3(0, 0, MovementSpeed);
-                    velocityVector = Vector3.Transform(velocityVector, moveForward);
-                    Vector3 tempPosition = new Vector3(Position.X + velocityVector.X, Position.Y, Position.Z + velocityVector.Z);
-                    Position = tempPosition;
+                    if (keyboard.IsKeyDown(Up) || (gamepad.ThumbSticks.Left.Y > 0))
+                    {
+                        Matrix moveForward = Matrix.CreateRotationY(rotationAngle);
+                        Vector3 velocityVector = new Vector3(0, 0, MovementSpeed);
+                        velocityVector = Vector3.Transform(velocityVector, moveForward);
+                        Vector3 tempPosition = new Vector3(Position.X + velocityVector.X, Position.Y, Position.Z + velocityVector.Z);
+                        Position = tempPosition;
+                    }
+                    if (keyboard.IsKeyDown(Right) || (gamepad.ThumbSticks.Left.X > 0))
+                    {
+                        rotationAngle -= MathHelper.ToRadians(2f);
+                    }
+                    else if (keyboard.IsKeyDown(Left) || (gamepad.ThumbSticks.Left.X < 0))
+                    {
+                        rotationAngle += MathHelper.ToRadians(2f);
+                    }
                 }
-                /*else if (keyboard.IsKeyDown(Down) || (gamepad.ThumbSticks.Left.Y < 0))
+                else
                 {
-                    Position = Position + Vector3.UnitZ * (-MovementSpeed);
-                    rotationAngle = 180f;
-                }//
-
-                if (keyboard.IsKeyDown(Right) || (gamepad.ThumbSticks.Left.X > 0))
-                {
-                    //Position = Position + Vector3.UnitX * (-MovementSpeed);
-                    //rotationAngle = 270f;
-                    rotationAngle -= 2f;
+                    Position = new Vector3(Position.X - (gamepad.ThumbSticks.Left.X * MovementSpeed), Position.Y, Position.Z + (gamepad.ThumbSticks.Left.Y * MovementSpeed));
                 }
-                else if (keyboard.IsKeyDown(Left) || (gamepad.ThumbSticks.Left.X < 0))
-                {
-                    //Position = Position + Vector3.UnitX * MovementSpeed;
-                    //rotationAngle = 90f;
-                    rotationAngle += 2f;
-                }*/
-
-                Position = new Vector3(Position.X - (gamepad.ThumbSticks.Left.X * MovementSpeed), Position.Y, Position.Z + (gamepad.ThumbSticks.Left.Y * MovementSpeed));
+                #else
+                    Position = new Vector3(Position.X - (gamepad.ThumbSticks.Left.X * MovementSpeed), Position.Y, Position.Z + (gamepad.ThumbSticks.Left.Y * MovementSpeed));    
+                #endif
             }
 
             // This needs to be outside the if so that the release of the button can be detected

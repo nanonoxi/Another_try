@@ -69,7 +69,7 @@ namespace Gameception
                             debouncer = 60;
 
                         so.getSound().Play();
-        
+
                     }
                     break;
                 }
@@ -143,6 +143,12 @@ namespace Gameception
             foreach (SoundObject so in sounds)
                 if (so.songOrSoundEffect == 1)
                     so.update();
+        }
+
+        internal void setVolume(float currentSoundVolume)
+        {
+            MediaPlayer.Volume = currentSoundVolume;
+            SoundEffect.MasterVolume = currentSoundVolume;
         }
     }
 }
