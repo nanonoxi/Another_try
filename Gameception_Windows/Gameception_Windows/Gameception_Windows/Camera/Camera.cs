@@ -89,8 +89,8 @@ namespace Gameception
             {
                 //player1.Position = player1.PreviousPosition;
                 //player2.Position = player2.PreviousPosition;
-                player1.revertPosition();
-                player2.revertPosition();
+                //player1.revertPosition();
+                //player2.revertPosition();
             }
 
             distanceBetween = MathHelper.Clamp(distanceBetween, 20, 10000000);

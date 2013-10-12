@@ -149,6 +149,7 @@ namespace Gameception
             {
                 if (speedDecrement < (MovementSpeed * 20))
                 {
+                    PreviousPosition = Position;
                     Position = Position + moveDirection * ((MovementSpeed * 20) - speedDecrement);
                     speedDecrement += 0.01f;
                 }

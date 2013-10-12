@@ -91,7 +91,7 @@ namespace Gameception
             if (elapsedFrames >= CooldownTime)
             {
                 // Create projectile
-                startPosition.Y += 1.5f;
+                startPosition.Y += 1.0f;
                 allProjectiles.Add(new Projectile(ProjectileModel, ProjectileSpeed, 0, 10f, startPosition, 0.1f, gameCamera, shotDirection));
 
                 // Play sound here

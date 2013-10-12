@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.GamerServices;
+using CustomAvatarAnimation;
 
 namespace Gameception
 {
@@ -23,6 +25,9 @@ namespace Gameception
 
         // The rotation of the model
         float rotationAngle;
+        
+        // The angle at which to shoot
+        float shootAngle;
 
         // The weapon used by this player
         Weapon playerWeapon;
@@ -39,6 +44,26 @@ namespace Gameception
         // The score of this player
         private int score;
 
+        // Used to check whether or not the player is idle;
+        private bool isIdle;
+
+        // Avatar associated with this player
+        AvatarDescription avatarDescription;
+        AvatarRenderer avatarRenderer;
+        AvatarAnimation avatarAnimation;
+        CustomAvatarAnimationData [] allAnimationData;
+
+        IAvatarAnimation[] animations;
+
+        CustomAvatarAnimationPlayer runPlayer;
+        CustomAvatarAnimationPlayer faintPlayer;
+
+        // All the possible animations of the avatar
+        private enum Animation {NONE, RUN, FAINT, THROW };
+        
+        // The current animation of the player
+        private Animation currentAnimation;
+        
         #endregion
 
         #region Properties
@@ -87,6 +112,60 @@ namespace Gameception
         {
             playerIndex = player;
             ammo = 10;
+
+            avatarDescription = AvatarDescription.CreateRandom(AvatarBodyType.Male);
+            avatarAnimation = new AvatarAnimation(AvatarAnimationPreset.MaleIdleLookAround);
+            avatarRenderer = new AvatarRenderer(avatarDescription);
+            avatarRenderer.Projection = camera.Projection;
+            avatarRenderer.View = camera.View;
+            avatarRenderer.World = Matrix.CreateScale(4f);
+
+            isIdle = true;
+        }
+
+        // constructor on xbox
+        public Player(Model model, float moveSpeed, int initialHealth, Vector3 startPosition, float scale, Camera camera, PlayerIndex player, CustomAvatarAnimationData[] animationData)
+            : base(model, moveSpeed, initialHealth, startPosition, scale, camera)
+        {
+            playerIndex = player;
+            ammo = 10;
+
+            isIdle = true;
+
+            if (playerIndex == PlayerIndex.One)
+            {
+                avatarDescription = AvatarDescription.CreateRandom(AvatarBodyType.Male);
+                avatarAnimation = new AvatarAnimation(AvatarAnimationPreset.Stand1);
+            }
+            else
+            {
+                avatarDescription = AvatarDescription.CreateRandom(AvatarBodyType.Female);
+                avatarAnimation = new AvatarAnimation(AvatarAnimationPreset.Stand1);
+            }
+
+            avatarRenderer = new AvatarRenderer(avatarDescription);
+            avatarRenderer.Projection = camera.Projection;
+            avatarRenderer.View = camera.View;
+            avatarRenderer.World = Matrix.CreateScale(4f);
+
+            allAnimationData = animationData;
+
+            runPlayer = new CustomAvatarAnimationPlayer(allAnimationData[0].Name, allAnimationData[0].Length, allAnimationData[0].Keyframes, allAnimationData[0].ExpressionKeyframes);
+            faintPlayer = new CustomAvatarAnimationPlayer(allAnimationData[1].Name, allAnimationData[1].Length, allAnimationData[1].Keyframes, allAnimationData[1].ExpressionKeyframes);
+
+            this.Position = new Vector3(Position.X, 0 , Position.Z);
+            currentAnimation = Animation.NONE;
+
+            avatarBoundingSphere();
+        }
+
+        // calculate the bounding sphere for this players avatar (XBOX only)
+        private void avatarBoundingSphere()
+        {
+            BoundingSphere avatarSphere = new BoundingSphere();
+            avatarSphere.Center = Position;
+            avatarSphere.Radius = (avatarDescription.Height / 2) * ScaleFactor;
+            this.ObjectBoundingSphere = avatarSphere;
         }
 
         /// <summary>
@@ -118,14 +197,44 @@ namespace Gameception
 
         #region Update
 
-        public override void Update()
+        public void Update(GameTime gameTime)
         {
+            if (Position.X < 3 || Position.X > 220)
+            {
+                revertPosition();
+            }
+            if (Position.Z > -3 || Position.Z < -198.06)
+            {
+                revertPosition();
+            }
+
             if (PlayerWeapon != null)
             {
                 PlayerWeapon.Update();
             }
 
-            base.Update();
+            #if XBOX
+                switch (currentAnimation)
+                {
+                    case Animation.NONE: break;
+                    case Animation.RUN: runPlayer.Update(gameTime.ElapsedGameTime, true); break;
+                    case Animation.FAINT: faintPlayer.Update(gameTime.ElapsedGameTime, false); break;
+                }
+
+                if (currentAnimation != Animation.FAINT)
+                {
+                    if (faintPlayer.CurrentPosition >= System.TimeSpan.Zero)
+                    {
+                        faintPlayer.CurrentPosition = System.TimeSpan.Zero;
+                    }
+                }
+            #endif
+
+            //avatarAnimation.Update(gameTime.ElapsedGameTime, true);
+            avatarRenderer.Projection = GameCamera.Projection;
+            avatarRenderer.View = GameCamera.View;
+
+            this.Update();
         }
 
         public void setSoundManager(SoundManager s)
@@ -142,7 +251,13 @@ namespace Gameception
             {
                 if (Position != PreviousPosition)
                 {
+                    isIdle = false;
                     PlayerFacing = Position - PreviousPosition;
+                }
+                else
+                {
+                    isIdle = true;
+                    currentAnimation = Animation.NONE;
                 }
 
                 PreviousPosition = Position;
@@ -153,6 +268,11 @@ namespace Gameception
                 if ((gamePadX != 0) || (gamePadY != 0))
                 {
                     rotationAngle = (float)(Math.Atan2(-gamePadX, gamePadY));
+                    shootAngle = rotationAngle;
+
+                    #if XBOX
+                        rotationAngle = (float)(Math.Atan2(gamePadX, -gamePadY));
+                    #endif
                 }
 
                 #if WINDOWS
@@ -180,7 +300,13 @@ namespace Gameception
                     Position = new Vector3(Position.X - (gamepad.ThumbSticks.Left.X * MovementSpeed), Position.Y, Position.Z + (gamepad.ThumbSticks.Left.Y * MovementSpeed));
                 }
                 #else
-                    Position = new Vector3(Position.X - (gamepad.ThumbSticks.Left.X * MovementSpeed), Position.Y, Position.Z + (gamepad.ThumbSticks.Left.Y * MovementSpeed));    
+                    Position = new Vector3(Position.X - (gamepad.ThumbSticks.Left.X * MovementSpeed), Position.Y, Position.Z + (gamepad.ThumbSticks.Left.Y * MovementSpeed));
+                    
+                    if ((gamepad.ThumbSticks.Left.X != 0) && (gamepad.ThumbSticks.Left.Y != 0) && (CanMove == true))
+                    {
+                        isIdle = false;
+                        currentAnimation = Animation.RUN;
+                    }
                 #endif
             }
 
@@ -191,7 +317,7 @@ namespace Gameception
                 {
                     if (ammo > 0)
                     {
-                        Matrix forward = Matrix.CreateRotationY(rotationAngle);
+                        Matrix forward = Matrix.CreateRotationY(shootAngle);
                         Vector3 shootingDirection = new Vector3(0, 0, MovementSpeed);
                         shootingDirection = Vector3.Transform(shootingDirection, forward);
 
@@ -199,17 +325,20 @@ namespace Gameception
                     }
                     else
                     {
-                       // Play sound here that indicates ammo is finished
+                        // Play sound here that indicates ammo is finished
                     }
                 }
                 else if (playerIndex == PlayerIndex.Two && ObjectHeld == false) // Player 2 can't move while pulling an object
                 {
-                    Matrix forward = Matrix.CreateRotationY(rotationAngle);
+                    Matrix forward = Matrix.CreateRotationY(shootAngle);
                     Vector3 shootingDirection = new Vector3(0, 0, MovementSpeed);
                     shootingDirection = Vector3.Transform(shootingDirection, forward);
 
                     PlayerWeapon.fire(GameCamera, Position, shootingDirection);
                     CanMove = false;
+
+                    isIdle = false;
+                    currentAnimation = Animation.FAINT;
                 }
             }
             else
@@ -233,13 +362,18 @@ namespace Gameception
             Matrix[] transforms = new Matrix[ObjectModel.Bones.Count];
             ObjectModel.CopyAbsoluteBoneTransformsTo(transforms);
 
-            Matrix rotation = Matrix.CreateRotationY(rotationAngle);
+            #if WINDOWS
+                Matrix rotation = Matrix.CreateRotationY(rotationAngle);
+            #else
+                Matrix rotation = Matrix.CreateRotationY(rotationAngle);
+            #endif
 
             // Only draw a gameObject if it's active
             if (Active)
             {
-                if (InFrustrum)
+                if (InFrustum)
                 {
+                    #if WINDOWS
                     foreach (ModelMesh mesh in ObjectModel.Meshes)
                     {
                         foreach (BasicEffect effect in mesh.Effects)
@@ -253,6 +387,24 @@ namespace Gameception
 
                         mesh.Draw();
                     }
+                    #else
+                        avatarRenderer.Projection = GameCamera.Projection;
+                        avatarRenderer.View = GameCamera.View;
+                        avatarRenderer.World = rotation * Matrix.CreateScale(4f) * Matrix.CreateTranslation(Position);
+                        if(isIdle)
+                        {
+                            avatarRenderer.Draw(avatarAnimation);
+                        }
+                        else
+                        {
+                            switch(currentAnimation)
+                            {
+                                case Animation.RUN: avatarRenderer.Draw(runPlayer); break;
+                                case Animation.FAINT: avatarRenderer.Draw(faintPlayer); break;
+                                default:avatarRenderer.Draw(avatarAnimation); break;
+                            }
+                        }
+                    #endif
                 }
             }
 

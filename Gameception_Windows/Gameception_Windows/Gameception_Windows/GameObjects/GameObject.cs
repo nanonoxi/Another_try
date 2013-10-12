@@ -40,8 +40,11 @@ namespace Gameception
         // An alternate texture for this gameObject
         private Texture2D alternateTexture;
 
+        // The bounding sphere of this object
+        public BoundingSphere objectBoundingSphere;
+
         // Determines whether this object is in the view frustrum
-        private bool inFrustrum;
+        private bool inFrustum;
 
         #region Properties
 
@@ -105,10 +108,16 @@ namespace Gameception
             set { alternateTexture = value; }
         }
 
-        public bool InFrustrum
+        public BoundingSphere ObjectBoundingSphere
         {
-            get { return inFrustrum; }
-            set { inFrustrum = value; }
+            get { return objectBoundingSphere; }
+            set { objectBoundingSphere = value; }
+        }
+
+        public bool InFrustum
+        {
+            get { return inFrustum; }
+            set { inFrustum = value; }
         }
 
         #endregion
@@ -123,6 +132,8 @@ namespace Gameception
             ScaleFactor = scale;
             GameCamera = camera;
 
+            calculateBoundingSphere();
+
             Active = true; // Active by default
         }
 
@@ -136,36 +147,39 @@ namespace Gameception
             ScaleFactor = scale;
             GameCamera = camera;
 
+            calculateBoundingSphere();
+
             Active = true; // Active by default
         }
 
+        // Calculates the bounding sphere for this object
+        private void calculateBoundingSphere()
+        {
+            foreach (ModelMesh mesh in ObjectModel.Meshes)
+            {
+                if (ObjectBoundingSphere.Radius == 0) // If this is the first mesh
+                {
+                    ObjectBoundingSphere = mesh.BoundingSphere;
+                }
+                else
+                {
+                    ObjectBoundingSphere = BoundingSphere.CreateMerged(ObjectBoundingSphere, mesh.BoundingSphere);
+                }
+            }
+
+            objectBoundingSphere.Radius *= ScaleFactor;
+        }
 
         // Create and return a bounding sphere for this game object
         public BoundingSphere getBoundingSphere()
         {
-            BoundingSphere objectBoundingShere = new BoundingSphere();
-
-            foreach (ModelMesh mesh in ObjectModel.Meshes)
-            {
-                if (objectBoundingShere.Radius == 0) // If this is the first mesh
-                {
-                    objectBoundingShere = mesh.BoundingSphere;
-                }
-                else
-                {
-                    objectBoundingShere = BoundingSphere.CreateMerged(objectBoundingShere, mesh.BoundingSphere);
-                }
-            }
-
-            objectBoundingShere.Center = Position;
-            objectBoundingShere.Radius *= ScaleFactor;
-
-            return objectBoundingShere;
+            return objectBoundingSphere;
         }
 
         public virtual void Update()
         {
-            inFrustrum = gameCamera.inView(this.getBoundingSphere());
+            InFrustum = gameCamera.inView(this.getBoundingSphere());
+            objectBoundingSphere.Center = Position;
         }
 
         // Draw the model to the screen
@@ -177,7 +191,7 @@ namespace Gameception
             // Only draw a gameObject if it's active
             if (Active)
             {
-                if (inFrustrum)
+                if (InFrustum)
                 {
                     foreach (ModelMesh mesh in ObjectModel.Meshes)
                     {
@@ -188,18 +202,18 @@ namespace Gameception
                             // Three Directional Lights for the scene
                             effect.DirectionalLight0.Enabled = true;
                             effect.DirectionalLight0.Direction = new Vector3(0, 0, 1);
-                            effect.DirectionalLight0.DiffuseColor = Color.Azure.ToVector3();
-                            effect.DirectionalLight0.SpecularColor = Color.Blue.ToVector3();
+                            effect.DirectionalLight0.DiffuseColor = Color.Gray.ToVector3();
+                            effect.DirectionalLight0.SpecularColor = Color.White.ToVector3();
 
                             effect.DirectionalLight1.Enabled = true;
                             effect.DirectionalLight1.Direction = new Vector3(0, -1, 0);
-                            effect.DirectionalLight1.DiffuseColor = Color.Azure.ToVector3();
-                            effect.DirectionalLight1.SpecularColor = Color.Gold.ToVector3();
+                            effect.DirectionalLight1.DiffuseColor = Color.Gray.ToVector3();
+                            effect.DirectionalLight1.SpecularColor = Color.White.ToVector3();
 
                             effect.DirectionalLight2.Enabled = true;
                             effect.DirectionalLight2.Direction = new Vector3(-1, 0, 0);
-                            effect.DirectionalLight2.DiffuseColor = Color.BurlyWood.ToVector3();
-                            effect.DirectionalLight2.SpecularColor = Color.BurlyWood.ToVector3();
+                            effect.DirectionalLight2.DiffuseColor = Color.Gray.ToVector3();
+                            effect.DirectionalLight2.SpecularColor = Color.White.ToVector3();
 
                             if (UseAlternateTexture && AlternateTexture != null)
                             {

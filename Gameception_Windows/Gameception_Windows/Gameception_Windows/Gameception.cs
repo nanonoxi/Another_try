@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.GamerServices;
 
 namespace Gameception
 {
@@ -34,18 +35,18 @@ namespace Gameception
             Content.RootDirectory = "Content";
 
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 800; //1920;
-            graphics.PreferredBackBufferHeight = 600; //1080;
+            graphics.PreferredBackBufferWidth = 1920;// 800;// 1920;
+            graphics.PreferredBackBufferHeight = 1080;// 600;// 1080;
             graphics.PreferMultiSampling = true;
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
 
             screenManager = new ScreenManager(this);
             Components.Add(screenManager);
+            Components.Add(new GamerServicesComponent(this));
 
             // Activate the first screens
             screenManager.AddScreen(new SplashScreen(screenManager), null);
         }
-
 
         /// <summary>
         /// Loads graphics content.
